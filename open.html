@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Opening FOUND…</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f8f6f3;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.10);
+      border-radius: 20px;
+      max-width: 380px;
+      width: 100%;
+      padding: 40px 32px 36px;
+      text-align: center;
+    }
+    .logo {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: #111;
+      letter-spacing: -0.5px;
+      margin-bottom: 28px;
+    }
+    h1 {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 22px;
+      font-weight: 400;
+      color: #111;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #6b6b6b;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">FOUND</div>
+    <h1 id="heading">Opening the app…</h1>
+    <p id="sub">You'll be taken to your profile in a moment.</p>
+  </div>
+
+  <script>
+    const params   = new URLSearchParams(window.location.search);
+    const dest     = params.get('to') || 'edit-profile';
+    const deepLink = 'found://' + dest;
+
+    // Fire the deep link — on iOS/Android with app installed this opens it directly.
+    window.location.href = deepLink;
+
+    // If still here after 2s (desktop or app not installed), show simple message.
+    setTimeout(() => {
+      document.getElementById('heading').textContent = 'Open FOUND on your phone';
+      document.getElementById('sub').textContent     = 'Tap your profile photo, then Edit Profile to finish setting up.';
+    }, 2000);
+  </script>
+</body>
+</html>

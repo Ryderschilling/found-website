@@ -52,6 +52,18 @@
     Cache-Control = "public, max-age=31536000, immutable"
 
 # ---- Redirects ---------------------------------------------------------------
+# Block internal-only folders from being served publicly (kept in the repo
+# for reference, never part of the live site).
+[[redirects]]
+  from   = "/_archive/*"
+  to     = "/"
+  status = 404
+
+[[redirects]]
+  from   = "/_supabase/*"
+  to     = "/"
+  status = 404
+
 # Force HTTPS (Netlify also does this by default — being explicit is safer).
 [[redirects]]
   from   = "http://found.community/*"

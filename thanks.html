@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thank you — FOUND</title>
+  <meta name="description" content="Thank you for supporting FOUND." />
+
+  <!-- Favicons / app icons — FOUND brand mark -->
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#111111">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f8f6f3;
+      color: #111111;
+    }
+    .serif { font-family: Georgia, "Times New Roman", serif; }
+    .grain {
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(0,0,0,0.035) 0, transparent 24%),
+        radial-gradient(circle at 80% 0%, rgba(122,132,106,0.18) 0, transparent 28%),
+        radial-gradient(circle at 50% 90%, rgba(217,204,189,0.35) 0, transparent 32%);
+    }
+
+    @keyframes pulseRing {
+      0%   { transform: scale(0.95); opacity: 0.6; }
+      50%  { transform: scale(1.05); opacity: 0; }
+      100% { transform: scale(0.95); opacity: 0; }
+    }
+    .check-ring::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 9999px;
+      background: rgba(122, 132, 106, 0.3);
+      animation: pulseRing 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up {
+      opacity: 0;
+      animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+
+<header class="bg-[#f8f6f3]/85 backdrop-blur border-b border-black/5">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 h-20 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3">
+      <img src="/logo.png" alt="FOUND logo" width="36" height="36" />
+      <span class="text-2xl tracking-tight font-semibold">FOUND</span>
+    </a>
+    <a href="/" class="text-sm text-neutral-600 hover:text-black">Back to home</a>
+  </div>
+</header>
+
+<main class="grain flex-1 flex items-center justify-center px-5 md:px-8 py-16">
+  <div class="w-full max-w-2xl text-center">
+
+    <!-- Confirmation icon -->
+    <div class="fade-up" style="animation-delay: 0.05s;">
+      <div class="relative inline-flex items-center justify-center w-20 h-20 rounded-full bg-[#7a846a]/15 mb-8 check-ring">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#7a846a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+    </div>
+
+    <p class="text-sm uppercase tracking-[0.3em] text-neutral-400 mb-5 fade-up" style="animation-delay: 0.15s;">
+      Payment received
+    </p>
+
+    <h1 class="serif text-5xl md:text-6xl leading-[1.05] tracking-tight mb-6 fade-up" style="animation-delay: 0.25s;">
+      Thank you for supporting FOUND.
+    </h1>
+
+    <p class="text-lg md:text-xl text-neutral-700 leading-relaxed max-w-xl mx-auto mb-4 fade-up" style="animation-delay: 0.35s;">
+      Your gift goes directly into building real Christian community —
+      from the people who need it to the churches that serve them.
+    </p>
+
+    <p class="text-sm text-neutral-500 mb-10 fade-up" style="animation-delay: 0.45s;">
+      A receipt has been emailed to you from Stripe.
+      Questions? Reach us at
+      <a href="mailto:hello@found.community" class="underline underline-offset-2 hover:text-black">hello@found.community</a>.
+    </p>
+
+    <div class="flex flex-col sm:flex-row gap-3 justify-center fade-up" style="animation-delay: 0.55s;">
+      <a href="/signup.html"
+         class="rounded-full bg-black text-white px-8 py-4 text-center text-base font-medium hover:opacity-90 transition">
+        Create your account
+      </a>
+      <a href="/"
+         class="rounded-full bg-white border border-black/10 px-8 py-4 text-center text-base font-medium hover:bg-[#efe9e1] transition">
+        Back to home
+      </a>
+    </div>
+
+    <!-- Share invite -->
+    <div class="mt-14 fade-up" style="animation-delay: 0.7s;">
+      <p class="text-sm text-neutral-500 mb-3">Help us reach more people.</p>
+      <button type="button" id="shareBtn"
+              class="rounded-full bg-white border border-black/10 px-6 py-3 text-sm font-medium hover:bg-[#efe9e1] transition">
+        <span id="shareLabel">Share FOUND</span>
+      </button>
+    </div>
+
+  </div>
+</main>
+
+<footer class="px-5 md:px-8 py-8 border-t border-black/5">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-3 items-center justify-between text-sm text-neutral-500">
+    <div class="font-semibold text-black text-lg">FOUND</div>
+    <div class="flex gap-5">
+      <a href="/terms.html" class="hover:text-black">Terms of Use</a>
+      <a href="/privacy.html" class="hover:text-black">Privacy Policy</a>
+      <a href="mailto:hello@found.community" class="hover:text-black">Contact</a>
+    </div>
+    <div>found.community</div>
+  </div>
+</footer>
+
+<script>
+  const SHARE_URL   = 'https://found.community/';
+  const SHARE_TITLE = 'FOUND — Find Real Christian Community';
+  const SHARE_TEXT  = 'FOUND helps Christians find real local community. Check it out:';
+
+  const shareBtn   = document.getElementById('shareBtn');
+  const shareLabel = document.getElementById('shareLabel');
+
+  async function copyShareUrl() {
+    try {
+      await navigator.clipboard.writeText(SHARE_URL);
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = SHARE_URL;
+      ta.style.position = 'fixed';
+      ta.style.opacity  = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch {}
+      document.body.removeChild(ta);
+    }
+    if (shareLabel) {
+      shareLabel.textContent = 'Link copied!';
+      setTimeout(() => { shareLabel.textContent = 'Share FOUND'; }, 1800);
+    }
+  }
+
+  if (shareBtn) {
+    shareBtn.addEventListener('click', async () => {
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: SHARE_TITLE, text: SHARE_TEXT, url: SHARE_URL });
+          return;
+        } catch (e) {
+          if (e?.name === 'AbortError') return;
+        }
+      }
+      copyShareUrl();
+    });
+  }
+</script>
+
+</body>
+</html>

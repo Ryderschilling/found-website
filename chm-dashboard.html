@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHM — Business Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f4f5f7;
+    color: #1a1a2e;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .logo { width: 44px; height: 44px; background: linear-gradient(135deg, #4fc3f7, #0288d1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; color: white; }
+  .header h1 { font-size: 22px; font-weight: 700; color: white; letter-spacing: -0.3px; }
+  .header p { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+  .header-badge { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.85); padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; }
+
+  /* NAV TABS */
+  .nav {
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0 32px;
+    display: flex;
+    gap: 4px;
+  }
+  .nav-tab {
+    padding: 14px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #6b7280;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .nav-tab:hover { color: #0f3460; }
+  .nav-tab.active { color: #0f3460; border-bottom-color: #0f3460; }
+
+  /* MAIN */
+  .main { padding: 28px 32px; max-width: 1400px; margin: 0 auto; }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* KPI GRID */
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  .kpi-card {
+    background: white;
+    border-radius: 14px;
+    padding: 22px 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    border: 1px solid #f0f0f5;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent, #0f3460);
+  }
+  .kpi-label { font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+  .kpi-value { font-size: 32px; font-weight: 800; color: #0f3460; letter-spacing: -1px; line-height: 1; }
+  .kpi-sub { font-size: 12px; color: #9ca3af; margin-top: 6px; }
+  .kpi-icon { position: absolute; top: 18px; right: 20px; font-size: 28px; opacity: 0.12; }
+
+  /* CHARTS GRID */
+  .charts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .chart-card {
+    background: white;
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    border: 1px solid #f0f0f5;
+  }
+  .chart-title { font-size: 14px; font-weight: 700; color: #0f3460; margin-bottom: 4px; }
+  .chart-sub { font-size: 12px; color: #9ca3af; margin-bottom: 20px; }
+  .chart-wrap { position: relative; height: 240px; }
+
+  /* TABLE */
+  .card {
+    background: white;
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    border: 1px solid #f0f0f5;
+    margin-bottom: 20px;
+  }
+  .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+  .card-title { font-size: 15px; font-weight: 700; color: #0f3460; }
+  .card-count { font-size: 12px; font-weight: 600; color: #9ca3af; background: #f4f5f7; padding: 4px 10px; border-radius: 20px; }
+
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.7px; padding: 8px 12px; border-bottom: 2px solid #f0f0f5; }
+  td { padding: 13px 12px; font-size: 13px; color: #374151; border-bottom: 1px solid #f8f9fa; vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafbff; }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .badge-green { background: #d1fae5; color: #065f46; }
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+  .badge-gray { background: #f3f4f6; color: #6b7280; }
+  .badge-orange { background: #fed7aa; color: #9a3412; }
+
+  /* SEARCH */
+  .search-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 18px;
+    align-items: center;
+  }
+  .search-input {
+    flex: 1;
+    padding: 10px 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #374151;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-input:focus { border-color: #0f3460; }
+  .filter-select {
+    padding: 10px 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #374151;
+    outline: none;
+    background: white;
+  }
+
+  /* CUSTOMER CARD GRID */
+  .customer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .customer-card {
+    background: white;
+    border-radius: 12px;
+    padding: 18px 20px;
+    border: 1px solid #f0f0f5;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .customer-card:hover { border-color: #0f3460; box-shadow: 0 4px 12px rgba(15,52,96,0.12); transform: translateY(-1px); }
+  .cc-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 15px; color: white; flex-shrink: 0;
+  }
+  .cc-name { font-size: 14px; font-weight: 700; color: #0f3460; }
+  .cc-location { font-size: 12px; color: #9ca3af; margin-top: 1px; }
+  .cc-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .cc-stat { background: #f8f9ff; border-radius: 8px; padding: 8px 10px; }
+  .cc-stat-label { font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; }
+  .cc-stat-value { font-size: 16px; font-weight: 800; color: #0f3460; margin-top: 2px; }
+
+  /* TRANSACTION TIMELINE */
+  .tx-row { display: flex; align-items: center; gap: 16px; padding: 12px 0; border-bottom: 1px solid #f3f4f6; }
+  .tx-row:last-child { border-bottom: none; }
+  .tx-dot { width: 10px; height: 10px; border-radius: 50%; background: #22c55e; flex-shrink: 0; }
+  .tx-date { font-size: 12px; color: #9ca3af; width: 85px; flex-shrink: 0; }
+  .tx-customer { font-size: 13px; font-weight: 600; color: #374151; flex: 1; }
+  .tx-amount { font-size: 15px; font-weight: 800; color: #0f3460; }
+
+  /* MONTH DETAIL */
+  .month-btn {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 2px solid #e5e7eb;
+    background: white;
+    color: #374151;
+    transition: all 0.2s;
+  }
+  .month-btn:hover, .month-btn.active { background: #0f3460; color: white; border-color: #0f3460; }
+  .month-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+
+  /* COLORS */
+  .c1 { background: #0f3460; }
+  .c2 { background: #16a085; }
+  .c3 { background: #8e44ad; }
+  .c4 { background: #e74c3c; }
+  .c5 { background: #f39c12; }
+  .c6 { background: #2980b9; }
+  .c7 { background: #27ae60; }
+  .c8 { background: #e67e22; }
+  .c9 { background: #c0392b; }
+  .c10 { background: #1abc9c; }
+  .c11 { background: #9b59b6; }
+  .c12 { background: #34495e; }
+  .c13 { background: #d35400; }
+  .c14 { background: #2c3e50; }
+  .c15 { background: #7f8c8d; }
+
+  .empty { text-align: center; padding: 40px; color: #9ca3af; font-size: 14px; }
+
+  @media (max-width: 1024px) {
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .charts-grid { grid-template-columns: 1fr; }
+    .customer-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .main { padding: 16px; }
+    .kpi-grid { grid-template-columns: 1fr 1fr; }
+    .customer-grid { grid-template-columns: 1fr; }
+    .nav { padding: 0 16px; }
+    .header { padding: 20px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="logo">🏠</div>
+    <div>
+      <h1>Coastal Home Management 30A</h1>
+      <p>Business Dashboard · Oct 2025 – Present</p>
+    </div>
+  </div>
+  <div class="header-badge">Live · Square Data</div>
+</div>
+
+<div class="nav">
+  <div class="nav-tab active" onclick="showPage('overview')">📊 Overview</div>
+  <div class="nav-tab" onclick="showPage('customers')">👥 Customers</div>
+  <div class="nav-tab" onclick="showPage('transactions')">💳 Transactions</div>
+</div>
+
+<div class="main">
+
+  <!-- OVERVIEW PAGE -->
+  <div class="page active" id="page-overview">
+
+    <div class="kpi-grid">
+      <div class="kpi-card" style="--accent:#0f3460">
+        <div class="kpi-icon">💰</div>
+        <div class="kpi-label">Total Revenue</div>
+        <div class="kpi-value">$5,425</div>
+        <div class="kpi-sub">Nov 2025 – May 2026</div>
+      </div>
+      <div class="kpi-card" style="--accent:#16a085">
+        <div class="kpi-icon">📅</div>
+        <div class="kpi-label">Avg Monthly Revenue</div>
+        <div class="kpi-value">$775</div>
+        <div class="kpi-sub">Over 7 months</div>
+      </div>
+      <div class="kpi-card" style="--accent:#8e44ad">
+        <div class="kpi-icon">👥</div>
+        <div class="kpi-label">Total Customers</div>
+        <div class="kpi-value">18</div>
+        <div class="kpi-sub">Since Nov 2025</div>
+      </div>
+      <div class="kpi-card" style="--accent:#e74c3c">
+        <div class="kpi-icon">🧾</div>
+        <div class="kpi-label">Total Transactions</div>
+        <div class="kpi-value">34</div>
+        <div class="kpi-sub">All completed · $159 avg</div>
+      </div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-title">Monthly Revenue</div>
+        <div class="chart-sub">Collected payments by month</div>
+        <div class="chart-wrap">
+          <canvas id="revenueChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Revenue by Customer</div>
+        <div class="chart-sub">Lifetime value breakdown</div>
+        <div class="chart-wrap">
+          <canvas id="customerChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Top Customers by Revenue</div>
+        <div class="card-count">All time</div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Customer</th>
+            <th>Location</th>
+            <th>Since</th>
+            <th>Transactions</th>
+            <th>Total Paid</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="topCustomersTable"></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- CUSTOMERS PAGE -->
+  <div class="page" id="page-customers">
+    <div class="search-bar">
+      <input class="search-input" type="text" id="customerSearch" placeholder="Search customers..." oninput="filterCustomers()">
+      <select class="filter-select" id="customerFilter" onchange="filterCustomers()">
+        <option value="all">All customers</option>
+        <option value="active">Active (paid 2026)</option>
+        <option value="inactive">Inactive (2025 only)</option>
+      </select>
+    </div>
+    <div class="customer-grid" id="customerGrid"></div>
+  </div>
+
+  <!-- TRANSACTIONS PAGE -->
+  <div class="page" id="page-transactions">
+    <div class="month-btns" id="monthBtns"></div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title" id="txTitle">All Transactions</div>
+        <div class="card-count" id="txCount">34 total</div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Customer</th>
+            <th>Location / Property</th>
+            <th>Note</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="txTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ==================== DATA ====================
+
+const customers = [
+  { id: "KMYYK5MB34", name: "Beth Tedesco", addr: "36 Pollard Cove West", city: "Inlet Beach", since: "2025-11-04", color: "c1" },
+  { id: "00R4Z53JTE", name: "Scott Clark", addr: "280 Log Landing St", city: "Inlet Beach", since: "2025-11-06", color: "c2" },
+  { id: "5EYSPYY66T", name: "Becky Portera", addr: "34 Windrow Way", city: "Inlet Beach", since: "2025-11-08", color: "c3" },
+  { id: "S4RHASKAVRJ", name: "Layne Birling", addr: "204 E Firethorn Circle", city: "Inlet Beach", since: "2025-11-08", color: "c4" },
+  { id: "W2AW1YXPS0", name: "Barb Reed", addr: "256 Naturewalk Blvd", city: "Inlet Beach", since: "2025-11-10", color: "c5" },
+  { id: "Q9QYX5PX2S", name: "Susan Raymer", addr: "Clark's Neighbor", city: "Inlet Beach", since: "2025-11-10", color: "c6" },
+  { id: "E7XSFHRDQY", name: "Eric Bruss", addr: "72 Rose Court St", city: "Inlet Beach", since: "2025-11-16", color: "c7" },
+  { id: "AB8H794VPQ", name: "Lynne Weller-Andrews", addr: "—", city: "—", since: "2025-11-30", color: "c8" },
+  { id: "Z3QKHD78ZE", name: "Cameron Hemphill", addr: "480 Cannonball Ln", city: "Inlet Beach", since: "2025-12-02", color: "c9" },
+  { id: "PV3RBY6A9Q", name: "Jennifer Pyatt", addr: "319 Pollard Cove E.", city: "Inlet Beach", since: "2025-12-09", color: "c10" },
+  { id: "2MY46M4B8M", name: "Christy Paoli", addr: "25 Ferndale Court", city: "Inlet Beach", since: "2026-01-14", color: "c11" },
+  { id: "8GWK09AJDC", name: "Andrea Impicciche", addr: "322 S Splash Dr", city: "Inlet Beach", since: "2026-02-06", color: "c12" },
+  { id: "ESW1ABGBZB", name: "Stacy Williams", addr: "374 South Splash Dr.", city: "Inlet Beach", since: "2026-02-18", color: "c13" },
+  { id: "18GJP33M6B", name: "Steve Reuss", addr: "233 Pollard Cove East", city: "Inlet Beach", since: "2026-04-09", color: "c14" },
+  { id: "BR21Y0QMVJ", name: "Emma Kathryn Rogge", addr: "—", city: "—", since: "2026-04-19", color: "c15" },
+  { id: "FTCT0WZB15", name: "Chris Lambert", addr: "12 Windrow Way", city: "Inlet Beach", since: "2026-04-25", color: "c1" },
+  { id: "KRRG0136X3", name: "Rebecca Brenneman", addr: "194 Sawbuck", city: "—", since: "2026-05-06", color: "c2" },
+  { id: "C55TSBFX31", name: "Denise Birling", addr: "204 E Firethorn Circle", city: "Inlet Beach", since: "2026-05-07", color: "c3" },
+];
+
+const customerMap = {};
+customers.forEach(c => customerMap[c.id] = c);
+
+const transactions = [
+  { date: "2025-11-13", cid: "W2AW1YXPS0", amount: 100, note: "" },
+  { date: "2025-11-30", cid: "KMYYK5MB34", amount: 200, note: "" },
+  { date: "2025-12-02", cid: "AB8H794VPQ", amount: 700, note: "" },
+  { date: "2025-12-09", cid: "Z3QKHD78ZE", amount: 100, note: "Paid via Venmo" },
+  { date: "2025-12-09", cid: "Q9QYX5PX2S", amount: 60,  note: "Paid via Venmo" },
+  { date: "2026-01-01", cid: "KMYYK5MB34", amount: 200, note: "" },
+  { date: "2026-01-14", cid: "W2AW1YXPS0", amount: 100, note: "" },
+  { date: "2026-02-01", cid: "KMYYK5MB34", amount: 150, note: "" },
+  { date: "2026-02-06", cid: "8GWK09AJDC", amount: 550, note: "" },
+  { date: "2026-02-15", cid: "W2AW1YXPS0", amount: 100, note: "" },
+  { date: "2026-02-18", cid: "ESW1ABGBZB", amount: 350, note: "" },
+  { date: "2026-02-28", cid: "KMYYK5MB34", amount: 150, note: "" },
+  { date: "2026-03-04", cid: "92YD8V914V", amount: 100, note: "" },
+  { date: "2026-03-05", cid: "92YD8V914V", amount: 50,  note: "" },
+  { date: "2026-03-14", cid: "W2AW1YXPS0", amount: 100, note: "" },
+  { date: "2026-03-17", cid: "92YD8V914V", amount: 50,  note: "" },
+  { date: "2026-03-20", cid: "92YD8V914V", amount: 50,  note: "" },
+  { date: "2026-03-22", cid: "KMYYK5MB34", amount: 115, note: "" },
+  { date: "2026-03-25", cid: "92YD8V914V", amount: 80,  note: "" },
+  { date: "2026-03-25", cid: "Z3QKHD78ZE", amount: 100, note: "" },
+  { date: "2026-04-06", cid: "KMYYK5MB34", amount: 40,  note: "" },
+  { date: "2026-04-14", cid: "W2AW1YXPS0", amount: 100, note: "" },
+  { date: "2026-04-14", cid: "18GJP33M6B", amount: 30,  note: "" },
+  { date: "2026-04-21", cid: "PV3RBY6A9Q", amount: 50,  note: "" },
+  { date: "2026-04-25", cid: "FTCT0WZB15", amount: 125, note: "" },
+  { date: "2026-04-25", cid: "5EYSPYY66T", amount: 75,  note: "" },
+  { date: "2026-04-29", cid: "PV3RBY6A9Q", amount: 50,  note: "" },
+  { date: "2026-05-06", cid: "KRRG0136X3", amount: 350, note: "" },
+  { date: "2026-05-12", cid: "C55TSBFX31", amount: 300, note: "" },
+  { date: "2026-05-13", cid: "KMYYK5MB34", amount: 460, note: "" },
+  { date: "2026-05-14", cid: "W2AW1YXPS0", amount: 100, note: "" },
+  { date: "2026-05-19", cid: "00R4Z53JTE", amount: 140, note: "" },
+  { date: "2026-05-25", cid: "5EYSPYY66T", amount: 75,  note: "" },
+  { date: "2026-05-25", cid: "FTCT0WZB15", amount: 125, note: "" },
+];
+
+// ==================== COMPUTED ====================
+
+// Customer LTV
+const ltv = {};
+const txCount = {};
+const lastPaid = {};
+transactions.forEach(t => {
+  ltv[t.cid] = (ltv[t.cid] || 0) + t.amount;
+  txCount[t.cid] = (txCount[t.cid] || 0) + 1;
+  if (!lastPaid[t.cid] || t.date > lastPaid[t.cid]) lastPaid[t.cid] = t.date;
+});
+
+// Monthly revenue
+const monthRevenue = {};
+const monthLabels = ["Nov '25", "Dec '25", "Jan '26", "Feb '26", "Mar '26", "Apr '26", "May '26"];
+const monthKeys   = ["2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05"];
+monthKeys.forEach(k => monthRevenue[k] = 0);
+transactions.forEach(t => {
+  const mk = t.date.slice(0, 7);
+  if (monthRevenue[mk] !== undefined) monthRevenue[mk] += t.amount;
+});
+
+// Helper
+function getCustomerName(cid) {
+  const c = customerMap[cid];
+  return c ? c.name : 'Unnamed Customer';
+}
+function getCustomerColor(cid) {
+  const c = customerMap[cid];
+  return c ? c.color : 'c15';
+}
+function initials(name) {
+  return name.split(' ').slice(0,2).map(n => n[0]).join('').toUpperCase();
+}
+function fmtDate(d) {
+  const [y,m,day] = d.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${months[parseInt(m)-1]} ${parseInt(day)}, ${y}`;
+}
+function isActive(cid) {
+  return lastPaid[cid] && lastPaid[cid] >= '2026-01-01';
+}
+
+// ==================== CHARTS ====================
+
+const CHART_COLORS = [
+  '#0f3460','#16a085','#8e44ad','#e74c3c','#f39c12',
+  '#2980b9','#27ae60','#e67e22','#c0392b','#1abc9c',
+  '#9b59b6','#34495e','#d35400','#2c3e50','#7f8c8d',
+];
+
+// Revenue bar chart
+const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+new Chart(revenueCtx, {
+  type: 'bar',
+  data: {
+    labels: monthLabels,
+    datasets: [{
+      label: 'Revenue',
+      data: monthKeys.map(k => monthRevenue[k]),
+      backgroundColor: monthKeys.map(k => monthRevenue[k] === Math.max(...monthKeys.map(k2 => monthRevenue[k2])) ? '#0f3460' : '#c8d8ef'),
+      borderRadius: 8,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => `$${ctx.raw.toLocaleString()}`
+        }
+      }
+    },
+    scales: {
+      y: {
+        grid: { color: '#f3f4f6' },
+        ticks: {
+          callback: v => `$${v}`,
+          font: { size: 11 }
+        }
+      },
+      x: {
+        grid: { display: false },
+        ticks: { font: { size: 11 } }
+      }
+    }
+  }
+});
+
+// Customer donut chart — top 8
+const sortedCusts = Object.entries(ltv).sort((a,b)=>b[1]-a[1]);
+const topN = 7;
+const topEntries = sortedCusts.slice(0, topN);
+const otherTotal = sortedCusts.slice(topN).reduce((s,e)=>s+e[1],0);
+if (otherTotal > 0) topEntries.push(['other', otherTotal]);
+
+const custCtx = document.getElementById('customerChart').getContext('2d');
+new Chart(custCtx, {
+  type: 'doughnut',
+  data: {
+    labels: topEntries.map(([cid]) => cid === 'other' ? 'Other' : getCustomerName(cid).split(' ')[0]),
+    datasets: [{
+      data: topEntries.map(([,v]) => v),
+      backgroundColor: CHART_COLORS.slice(0, topEntries.length),
+      borderWidth: 2,
+      borderColor: '#fff',
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '65%',
+    plugins: {
+      legend: {
+        position: 'right',
+        labels: { font: { size: 11 }, padding: 8, boxWidth: 12 }
+      },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` $${ctx.raw.toLocaleString()}`
+        }
+      }
+    }
+  }
+});
+
+// ==================== TOP CUSTOMERS TABLE ====================
+
+const topCustomersTable = document.getElementById('topCustomersTable');
+const sortedForTable = Object.entries(ltv)
+  .sort((a,b)=>b[1]-a[1])
+  .map(([cid, total], i) => {
+    const c = customerMap[cid];
+    const name = c ? c.name : 'Unnamed Customer';
+    const addr = c ? `${c.addr}` : '—';
+    const since = c ? fmtDate(c.since) : '—';
+    const color = c ? c.color : 'c15';
+    const active = isActive(cid);
+    const colorClass = CHART_COLORS[i % CHART_COLORS.length];
+    return `
+      <tr>
+        <td><strong style="color:#9ca3af">#${i+1}</strong></td>
+        <td>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="avatar ${color}" style="width:32px;height:32px;font-size:12px">${initials(name)}</div>
+            <span style="font-weight:600;color:#0f3460">${name}</span>
+          </div>
+        </td>
+        <td style="color:#6b7280;font-size:12px">${addr}</td>
+        <td style="color:#6b7280;font-size:12px">${since}</td>
+        <td style="font-weight:600">${txCount[cid] || 0}</td>
+        <td><strong style="color:#0f3460;font-size:15px">$${total.toLocaleString()}</strong></td>
+        <td><span class="badge ${active ? 'badge-green' : 'badge-gray'}">${active ? 'Active' : 'Inactive'}</span></td>
+      </tr>
+    `;
+  });
+topCustomersTable.innerHTML = sortedForTable.join('');
+
+// ==================== CUSTOMER GRID ====================
+
+let filteredCustomers = [...customers];
+
+function renderCustomerGrid() {
+  const grid = document.getElementById('customerGrid');
+  if (filteredCustomers.length === 0) {
+    grid.innerHTML = '<div class="empty" style="grid-column:1/-1">No customers found.</div>';
+    return;
+  }
+  grid.innerHTML = filteredCustomers
+    .sort((a,b) => (ltv[b.id]||0) - (ltv[a.id]||0))
+    .map(c => {
+      const total = ltv[c.id] || 0;
+      const count = txCount[c.id] || 0;
+      const active = isActive(c.id);
+      return `
+        <div class="customer-card" onclick="goToCustomer('${c.id}')">
+          <div class="cc-header">
+            <div class="avatar ${c.color}">${initials(c.name)}</div>
+            <div>
+              <div class="cc-name">${c.name}</div>
+              <div class="cc-location">${c.addr !== '—' ? c.addr : c.city}</div>
+            </div>
+          </div>
+          <div class="cc-stats">
+            <div class="cc-stat">
+              <div class="cc-stat-label">Lifetime Value</div>
+              <div class="cc-stat-value">$${total.toLocaleString()}</div>
+            </div>
+            <div class="cc-stat">
+              <div class="cc-stat-label">Payments</div>
+              <div class="cc-stat-value">${count}</div>
+            </div>
+            <div class="cc-stat" style="grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;">
+              <div>
+                <div class="cc-stat-label">Customer since</div>
+                <div style="font-size:12px;font-weight:600;color:#374151;margin-top:2px">${fmtDate(c.since)}</div>
+              </div>
+              <span class="badge ${active ? 'badge-green' : 'badge-gray'}">${active ? 'Active' : 'Inactive'}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+}
+
+function filterCustomers() {
+  const q = document.getElementById('customerSearch').value.toLowerCase();
+  const f = document.getElementById('customerFilter').value;
+  filteredCustomers = customers.filter(c => {
+    const matchQ = !q || c.name.toLowerCase().includes(q) || c.addr.toLowerCase().includes(q);
+    const matchF = f === 'all' || (f === 'active' && isActive(c.id)) || (f === 'inactive' && !isActive(c.id));
+    return matchQ && matchF;
+  });
+  renderCustomerGrid();
+}
+
+function goToCustomer(cid) {
+  showPage('transactions');
+  filterByMonth('all');
+  // Highlight that customer's transactions
+  setTimeout(() => {
+    document.querySelectorAll('#txTable tr').forEach(row => {
+      row.style.background = '';
+    });
+    document.querySelectorAll(`#txTable tr[data-cid="${cid}"]`).forEach(row => {
+      row.style.background = '#eff6ff';
+    });
+  }, 50);
+}
+
+renderCustomerGrid();
+
+// ==================== TRANSACTIONS ====================
+
+let activeTxMonth = 'all';
+const months = [
+  { key: 'all', label: 'All' },
+  { key: '2025-11', label: "Nov '25" },
+  { key: '2025-12', label: "Dec '25" },
+  { key: '2026-01', label: "Jan '26" },
+  { key: '2026-02', label: "Feb '26" },
+  { key: '2026-03', label: "Mar '26" },
+  { key: '2026-04', label: "Apr '26" },
+  { key: '2026-05', label: "May '26" },
+];
+
+const monthBtns = document.getElementById('monthBtns');
+monthBtns.innerHTML = months.map(m => `
+  <div class="month-btn ${m.key === 'all' ? 'active' : ''}" onclick="filterByMonth('${m.key}')">${m.label}</div>
+`).join('');
+
+function filterByMonth(mk) {
+  activeTxMonth = mk;
+  document.querySelectorAll('.month-btn').forEach(b => b.classList.remove('active'));
+  event && event.target && event.target.classList.add('active');
+  // find and activate correct button
+  document.querySelectorAll('.month-btn').forEach(b => {
+    if (b.textContent.trim() === months.find(m=>m.key===mk)?.label) b.classList.add('active');
+  });
+  renderTxTable();
+}
+
+function renderTxTable() {
+  const filtered = activeTxMonth === 'all'
+    ? transactions
+    : transactions.filter(t => t.date.startsWith(activeTxMonth));
+
+  const total = filtered.reduce((s,t)=>s+t.amount,0);
+  const titleEl = document.getElementById('txTitle');
+  const countEl = document.getElementById('txCount');
+  const title = activeTxMonth === 'all' ? 'All Transactions' : months.find(m=>m.key===activeTxMonth)?.label + ' Transactions';
+  titleEl.textContent = title;
+  countEl.textContent = `${filtered.length} transactions · $${total.toLocaleString()}`;
+
+  const tbody = document.getElementById('txTable');
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty">No transactions this period.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtered.map(t => {
+    const c = customerMap[t.cid];
+    const name = c ? c.name : 'Unnamed Customer';
+    const color = c ? c.color : 'c15';
+    const addr = c ? c.addr : '—';
+    return `
+      <tr data-cid="${t.cid}">
+        <td style="color:#6b7280;font-size:12px">${fmtDate(t.date)}</td>
+        <td>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="avatar ${color}" style="width:28px;height:28px;font-size:11px">${initials(name)}</div>
+            <span style="font-weight:600;color:#0f3460">${name}</span>
+          </div>
+        </td>
+        <td style="color:#6b7280;font-size:12px">${addr}</td>
+        <td style="color:#9ca3af;font-size:12px">${t.note || '—'}</td>
+        <td><strong style="color:#0f3460">$${t.amount.toLocaleString()}</strong></td>
+        <td><span class="badge badge-green">Completed</span></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+renderTxTable();
+
+// ==================== NAV ====================
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  event && event.target && event.target.classList.add('active');
+}
+
+</script>
+</body>
+</html>

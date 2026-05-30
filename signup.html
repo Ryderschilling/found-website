@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get Early Access — FOUND</title>
+  <meta name="description" content="Join the FOUND early access list. Create your account to find real Christian community nearby." />
+
+  <!-- Favicons / app icons — FOUND brand mark -->
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#111111">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f8f6f3;
+      color: #111111;
+    }
+    .serif { font-family: Georgia, "Times New Roman", serif; }
+    .grain {
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(0,0,0,0.035) 0, transparent 24%),
+        radial-gradient(circle at 80% 0%, rgba(122,132,106,0.18) 0, transparent 28%),
+        radial-gradient(circle at 50% 90%, rgba(217,204,189,0.35) 0, transparent 32%);
+    }
+    .input-field {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 12px;
+      background: #ffffff;
+      font-size: 16px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #111111;
+      box-shadow: 0 0 0 3px rgba(17,17,17,0.06);
+    }
+    .input-field:disabled {
+      background: #f4f2ef;
+      color: #6b6b6b;
+    }
+    .modal-hidden  { display: none; }
+    .modal-visible { display: flex; }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+
+<header class="bg-[#f8f6f3]/85 backdrop-blur border-b border-black/5">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 h-20 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3">
+      <img src="/logo.png" alt="FOUND logo" width="36" height="36" />
+      <span class="text-2xl tracking-tight font-semibold">FOUND</span>
+    </a>
+  </div>
+</header>
+
+<main class="grain flex-1 flex items-center justify-center px-5 md:px-8 py-16">
+  <div class="w-full max-w-md">
+    <div class="bg-white border border-black/10 rounded-3xl shadow-sm p-8 md:p-10">
+      <div class="mb-7">
+        <p class="text-xs uppercase tracking-[0.3em] text-neutral-400 mb-3">Early access</p>
+        <h1 class="serif text-4xl tracking-tight mb-2">Find your people.</h1>
+        <p class="text-neutral-600">FOUND is launching soon. Create your account now to lock in early access — we’ll let you in the moment it’s live.</p>
+      </div>
+
+      <form id="signupForm" class="space-y-4" novalidate>
+        <div>
+          <label class="block text-sm text-neutral-700 mb-1.5" for="fullName">Full name</label>
+          <input id="fullName" name="fullName" type="text" autocomplete="name" required
+                 class="input-field" placeholder="Your name" />
+        </div>
+
+        <div>
+          <label class="block text-sm text-neutral-700 mb-1.5" for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" required
+                 class="input-field" placeholder="you@example.com" />
+        </div>
+
+        <div>
+          <label class="block text-sm text-neutral-700 mb-1.5" for="phone">Phone number</label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" required
+                 class="input-field" placeholder="(555) 123-4567" />
+        </div>
+
+        <div>
+          <label class="block text-sm text-neutral-700 mb-1.5" for="zip">ZIP code</label>
+          <input id="zip" name="zip" type="text" inputmode="numeric" autocomplete="postal-code"
+                 required maxlength="5" pattern="\d{5}"
+                 class="input-field" placeholder="30A area — e.g. 32461" />
+          <p id="zipHint" class="text-xs text-neutral-400 mt-1">We use your ZIP to match you with community nearby.</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-sm text-neutral-700 mb-1.5" for="city">City</label>
+            <input id="city" name="city" type="text" autocomplete="address-level2" required
+                   class="input-field" placeholder="City" />
+          </div>
+          <div>
+            <label class="block text-sm text-neutral-700 mb-1.5" for="state">State</label>
+            <input id="state" name="state" type="text" autocomplete="address-level1" required
+                   maxlength="2" class="input-field uppercase" placeholder="ST" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm text-neutral-700 mb-1.5" for="password">Password</label>
+          <input id="password" name="password" type="password" autocomplete="new-password" required minlength="8"
+                 class="input-field" placeholder="At least 8 characters" />
+        </div>
+
+        <!-- ── Terms & Privacy Acknowledgment ──────────────────────────── -->
+        <div class="pt-2">
+          <p class="text-sm font-medium text-neutral-800 mb-2">Terms &amp; Privacy Acknowledgment</p>
+          <p class="text-xs text-neutral-500 leading-relaxed mb-3">
+            By submitting this form, you acknowledge that you are joining the FOUND waitlist
+            and agree to receive updates, launch announcements, and related communications
+            from FOUND. You also agree to FOUND's
+            <a href="/terms.html" target="_blank" class="underline underline-offset-2 hover:text-black">Terms of Use</a>
+            and acknowledge that you have read and understand our
+            <a href="/privacy.html" target="_blank" class="underline underline-offset-2 hover:text-black">Privacy Policy</a>.
+          </p>
+          <label class="flex items-start gap-2.5 cursor-pointer">
+            <input id="agree" name="agree" type="checkbox" required
+                   class="mt-0.5 h-4 w-4 shrink-0 rounded border-black/30 accent-black" />
+            <span class="text-sm text-neutral-700">
+              I agree to the FOUND
+              <a href="/terms.html" target="_blank" class="underline underline-offset-2 hover:text-black">Terms of Use</a>
+              and acknowledge the
+              <a href="/privacy.html" target="_blank" class="underline underline-offset-2 hover:text-black">Privacy Policy</a>.
+            </span>
+          </label>
+        </div>
+
+        <div id="signupError" class="hidden text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-4 py-3"></div>
+
+        <div id="signupSuccess" class="hidden text-sm text-[#7a846a] bg-[#7a846a]/10 border border-[#7a846a]/20 rounded-lg px-4 py-3">
+          You’re on the early access list. Next, answer a few quick questions so we can match you with community nearby.
+        </div>
+
+        <button id="signupBtn" type="submit"
+                class="w-full rounded-full bg-black text-white py-4 text-base font-medium hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed">
+          Get Early Access
+        </button>
+      </form>
+
+      <p class="text-sm text-neutral-500 text-center mt-5">
+        Already have an account?
+        <a href="/login.html" class="text-black underline underline-offset-2">Sign in</a>
+      </p>
+    </div>
+  </div>
+</main>
+
+<!-- ── Welcome popup — shown after a successful signup ──────────── -->
+<div id="welcomeModal" class="modal-hidden fixed inset-0 z-[100] items-center justify-center px-5"
+     role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+  <button type="button" data-close-welcome
+          class="absolute inset-0 bg-black/50 backdrop-blur-sm" aria-label="Close"></button>
+
+  <div class="relative bg-white rounded-[36px] max-w-md w-full p-8 md:p-10 border border-black/10 shadow-2xl text-center">
+    <div class="w-14 h-14 mx-auto mb-5 rounded-full bg-[#7a846a]/12 flex items-center justify-center">
+      <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24"
+           fill="none" stroke="#5a6450" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+
+    <p class="text-xs uppercase tracking-[0.3em] text-neutral-400 mb-3">Early access</p>
+    <h2 id="welcomeTitle" class="serif text-3xl md:text-4xl leading-tight mb-3">You’re in.</h2>
+    <p class="text-neutral-600 leading-relaxed mb-7">
+      Your spot is saved. Answer a few quick questions so we can match you
+      with real community nearby — it takes about two minutes.
+    </p>
+
+    <a href="/complete-profile.html"
+       class="block w-full rounded-full bg-black text-white px-6 py-4 text-base font-medium hover:opacity-90 transition">
+      Complete my profile
+    </a>
+    <a href="/"
+       class="block mt-4 text-sm text-neutral-500 hover:text-black underline underline-offset-2">
+      I’ll finish later
+    </a>
+  </div>
+</div>
+
+<footer class="px-5 md:px-8 py-8 border-t border-black/5">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-3 items-center justify-between text-sm text-neutral-500">
+    <div class="font-semibold text-black text-lg">FOUND</div>
+    <div class="flex gap-5">
+      <a href="/terms.html" class="hover:text-black">Terms of Use</a>
+      <a href="/privacy.html" class="hover:text-black">Privacy Policy</a>
+      <a href="mailto:hello@found.community" class="hover:text-black">Contact</a>
+    </div>
+    <div>found.community</div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/assets/auth.js"></script>
+<script>
+  (async () => {
+    const session = await foundAuth.getSession();
+    if (session) window.location.replace('/account.html');
+  })();
+
+  const form       = document.getElementById('signupForm');
+  const fullNameEl = document.getElementById('fullName');
+  const emailEl    = document.getElementById('email');
+  const phoneEl    = document.getElementById('phone');
+  const zipEl      = document.getElementById('zip');
+  const cityEl     = document.getElementById('city');
+  const stateEl    = document.getElementById('state');
+  const zipHintEl  = document.getElementById('zipHint');
+  const passwordEl = document.getElementById('password');
+  const agreeEl    = document.getElementById('agree');
+  const errorEl    = document.getElementById('signupError');
+  const successEl  = document.getElementById('signupSuccess');
+  const signupBtn  = document.getElementById('signupBtn');
+  const welcomeModal = document.getElementById('welcomeModal');
+
+  function showError(msg) {
+    errorEl.textContent = msg;
+    errorEl.classList.remove('hidden');
+  }
+  function clearMsgs() {
+    errorEl.classList.add('hidden');
+    successEl.classList.add('hidden');
+  }
+  // Account created. Email confirmation is OFF, so signUp() signs the user in
+  // right away — the popup's "Complete my profile" button takes them straight
+  // into the profile questions. A thank-you email also goes out behind it.
+  function showWelcome() {
+    welcomeModal.classList.remove('modal-hidden');
+    welcomeModal.classList.add('modal-visible');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeWelcome() {
+    welcomeModal.classList.add('modal-hidden');
+    welcomeModal.classList.remove('modal-visible');
+    document.body.style.overflow = '';
+  }
+  document.querySelectorAll('[data-close-welcome]').forEach((b) => {
+    b.addEventListener('click', closeWelcome);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeWelcome();
+  });
+
+  // Basic email format check — matches "anything@anything.anything" with no spaces.
+  function isValidEmail(value) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  }
+
+  // Phone: strip to digits, require 10–15 (US + intl tolerance).
+  function digitsOnly(value) {
+    return (value || '').replace(/\D/g, '');
+  }
+
+  // ── ZIP → City/State + coords auto-fill (Zippopotam.us — free, no API key) ──
+  // Fires on blur. Fills city/state if found; user can still edit. Coords are
+  // cached for the signup submit so the account is geocoded the moment it's
+  // created (handle_new_user trigger reads lat/lng from signup metadata).
+  let zipLookupToken = 0;
+  // Latest ZIP -> {lat, lng} we've resolved. Keyed by the ZIP that produced
+  // them so a stale lookup can't poison a different ZIP at submit time.
+  let zipCoords = { zip: null, lat: null, lng: null };
+
+  async function lookupZip() {
+    const zip = zipEl.value.trim();
+    if (!/^\d{5}$/.test(zip)) return;
+
+    const token = ++zipLookupToken;
+    zipHintEl.textContent = 'Looking up your city…';
+    zipHintEl.classList.remove('text-red-600');
+
+    try {
+      const res = await fetch(`https://api.zippopotam.us/us/${zip}`);
+      if (token !== zipLookupToken) return; // a newer lookup superseded this one
+      if (!res.ok) throw new Error('not found');
+      const data  = await res.json();
+      const place = data.places && data.places[0];
+      if (!place) throw new Error('not found');
+      cityEl.value  = place['place name'] || '';
+      stateEl.value = place['state abbreviation'] || '';
+      // Cache coords from the same response — free, since we already paid for the call.
+      const lat = place.latitude  ? Number(place.latitude)  : null;
+      const lng = place.longitude ? Number(place.longitude) : null;
+      zipCoords = {
+        zip,
+        lat: Number.isFinite(lat) ? lat : null,
+        lng: Number.isFinite(lng) ? lng : null,
+      };
+      zipHintEl.textContent = 'We use your ZIP to match you with community nearby.';
+    } catch {
+      if (token !== zipLookupToken) return;
+      // Don't block the user — just let them type city/state manually.
+      zipCoords = { zip: null, lat: null, lng: null };
+      zipHintEl.textContent = "Couldn't auto-fill that ZIP — enter your city and state below.";
+      zipHintEl.classList.add('text-red-600');
+    }
+  }
+
+  // Resolve ZIP -> coords directly, for the submit-time fallback. Used when the
+  // on-blur lookup hasn't fired yet (fast paste-and-submit) or the cached entry
+  // belongs to a different ZIP. Returns {lat,lng} or nulls; never throws.
+  async function geocodeZipDirect(zip) {
+    try {
+      const res = await fetch(`https://api.zippopotam.us/us/${zip}`);
+      if (!res.ok) return { lat: null, lng: null };
+      const data  = await res.json();
+      const place = data.places && data.places[0];
+      if (!place) return { lat: null, lng: null };
+      const lat = place.latitude  ? Number(place.latitude)  : null;
+      const lng = place.longitude ? Number(place.longitude) : null;
+      return {
+        lat: Number.isFinite(lat) ? lat : null,
+        lng: Number.isFinite(lng) ? lng : null,
+      };
+    } catch {
+      return { lat: null, lng: null };
+    }
+  }
+  zipEl.addEventListener('blur', lookupZip);
+  zipEl.addEventListener('input', () => {
+    zipEl.value = zipEl.value.replace(/\D/g, '').slice(0, 5);
+  });
+  stateEl.addEventListener('input', () => {
+    stateEl.value = stateEl.value.replace(/[^a-zA-Z]/g, '').toUpperCase().slice(0, 2);
+  });
+
+  // Map Supabase auth errors to plain-English copy.
+  function friendlySignUpError(raw) {
+    const msg = (raw || '').toLowerCase();
+    if (msg.includes('already registered') || msg.includes('already exists') || msg.includes('user_already_exists')) {
+      return 'That email is already registered. Try signing in instead.';
+    }
+    if (msg.includes('invalid format') || msg.includes('validate email')) {
+      return "That doesn't look like a valid email. Double-check the @ and domain.";
+    }
+    if (msg.includes('password') && msg.includes('weak')) {
+      return 'That password is too weak — try a longer one.';
+    }
+    if (msg.includes('rate limit') || msg.includes('too many')) {
+      return 'Too many sign-up attempts. Wait a minute and try again.';
+    }
+    return raw || 'Could not create account. Try again.';
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearMsgs();
+
+    const fullName = fullNameEl.value.trim();
+    const email    = emailEl.value.trim();
+    const phone    = phoneEl.value.trim();
+    const zip      = zipEl.value.trim();
+    const city     = cityEl.value.trim();
+    const state    = stateEl.value.trim().toUpperCase();
+    const password = passwordEl.value;
+
+    // ── Client-side validation (instant feedback, no API roundtrip) ──
+    if (!fullName) {
+      showError('Please enter your name.');
+      fullNameEl.focus();
+      return;
+    }
+    if (!isValidEmail(email)) {
+      showError("That doesn't look like a valid email. Make sure it has an @ and a domain (e.g. you@example.com).");
+      emailEl.focus();
+      return;
+    }
+    if (digitsOnly(phone).length < 10) {
+      showError('Please enter a valid phone number.');
+      phoneEl.focus();
+      return;
+    }
+    if (!/^\d{5}$/.test(zip)) {
+      showError('Please enter a valid 5-digit ZIP code.');
+      zipEl.focus();
+      return;
+    }
+    if (!city) {
+      showError('Please enter your city.');
+      cityEl.focus();
+      return;
+    }
+    if (!/^[A-Z]{2}$/.test(state)) {
+      showError('Please enter your 2-letter state (e.g. FL).');
+      stateEl.focus();
+      return;
+    }
+    if (password.length < 8) {
+      showError('Password must be at least 8 characters.');
+      passwordEl.focus();
+      return;
+    }
+    if (!agreeEl.checked) {
+      showError('Please agree to the Terms of Use and Privacy Policy to continue.');
+      agreeEl.focus();
+      return;
+    }
+
+    signupBtn.disabled = true;
+    signupBtn.textContent = 'Joining…';
+    try {
+      // Coords: prefer the cached lookup; if it's missing or belongs to a
+      // different ZIP (fast paste-and-submit before blur fired), resolve now.
+      // Non-fatal — if Zippopotam is down we sign up without coords and the
+      // app's client self-heal (AuthContext) will geocode on first app open.
+      let lat = null;
+      let lng = null;
+      if (zipCoords.zip === zip && zipCoords.lat != null && zipCoords.lng != null) {
+        lat = zipCoords.lat;
+        lng = zipCoords.lng;
+      } else {
+        const geo = await geocodeZipDirect(zip);
+        lat = geo.lat;
+        lng = geo.lng;
+      }
+
+      await foundAuth.signUp({
+        email, password, fullName, phone, zip, city, state, lat, lng,
+      });
+      // Email confirmation is OFF, so the user is signed in immediately.
+      // The popup's button takes them straight to the profile questions.
+      signupBtn.textContent = 'You’re on the list';
+      showWelcome();
+    } catch (err) {
+      showError(friendlySignUpError(err?.message));
+      signupBtn.disabled = false;
+      signupBtn.textContent = 'Get Early Access';
+    }
+  });
+</script>
+
+</body>
+</html>

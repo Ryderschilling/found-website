@@ -1,0 +1,82 @@
+<!--
+  FOUND — "Confirm signup" email template
+  ----------------------------------------------------------------
+  Paste this into the Supabase Dashboard:
+    Authentication  ->  Emails  ->  Confirm signup  ->  Message body (HTML)
+
+  {{ .ConfirmationURL }} is filled in by Supabase. Clicking it both
+  confirms the user's email AND redirects them to /complete-profile.html
+  (set by emailRedirectTo in assets/auth.js), where they answer the
+  onboarding questions.
+
+  Suggested Subject line:
+    Confirm your email & complete your FOUND profile
+  ----------------------------------------------------------------
+-->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f8f6f3;padding:32px 0;">
+  <tr>
+    <td align="center">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background:#ffffff;border:1px solid rgba(0,0,0,0.10);border-radius:20px;">
+        <tr>
+          <td style="padding:36px 36px 0 36px;">
+            <div style="font:700 24px Georgia,'Times New Roman',serif;color:#111111;letter-spacing:-0.5px;">FOUND</div>
+            <div style="font:600 11px Arial,sans-serif;color:#a3a3a3;letter-spacing:3px;text-transform:uppercase;margin-top:14px;">Early access</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:10px 36px 0 36px;">
+            <h1 style="font:400 30px Georgia,'Times New Roman',serif;color:#111111;letter-spacing:-0.5px;margin:0 0 14px;">
+              You're almost in.
+            </h1>
+            <p style="font:400 15px/1.6 Arial,sans-serif;color:#4b4b4b;margin:0 0 8px;">
+              Welcome to FOUND. One tap confirms your email and takes you to a few
+              quick questions — your stage of life, what you love to do, and the
+              kind of community you're looking for.
+            </p>
+            <p style="font:400 15px/1.6 Arial,sans-serif;color:#4b4b4b;margin:0 0 26px;">
+              It takes about two minutes, and it's how we match you with real
+              people nearby the moment FOUND launches.
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:0 36px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+                <td align="center" bgcolor="#111111" style="border-radius:9999px;">
+                  <a href="{{ .ConfirmationURL }}"
+                     style="display:block;padding:15px 28px;font:600 15px Arial,sans-serif;color:#ffffff;text-decoration:none;border-radius:9999px;">
+                    Complete my profile
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:22px 36px 0 36px;">
+            <p style="font:400 13px/1.6 Arial,sans-serif;color:#9a9a9a;margin:0;">
+              If the button doesn't work, copy and paste this link into your browser:
+            </p>
+            <p style="font:400 13px/1.6 Arial,sans-serif;color:#7a846a;word-break:break-all;margin:6px 0 0;">
+              {{ .ConfirmationURL }}
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:26px 36px 36px 36px;">
+            <hr style="border:none;border-top:1px solid rgba(0,0,0,0.08);margin:0 0 18px;" />
+            <p style="font:400 12px/1.6 Arial,sans-serif;color:#a3a3a3;margin:0;">
+              You're receiving this because you joined the FOUND early access list.
+              If this wasn't you, you can safely ignore this email.
+            </p>
+            <p style="font:400 12px/1.6 Arial,sans-serif;color:#a3a3a3;margin:10px 0 0;">
+              FOUND &middot; found.community &middot;
+              <a href="mailto:hello@found.community" style="color:#a3a3a3;">hello@found.community</a>
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>

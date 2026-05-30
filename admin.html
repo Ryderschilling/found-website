@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Early Access Stats — FOUND</title>
+  <meta name="description" content="FOUND early access signup stats." />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Favicons / app icons — FOUND brand mark -->
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#111111">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f8f6f3;
+      color: #111111;
+    }
+    .serif { font-family: Georgia, "Times New Roman", serif; }
+    .grain {
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(0,0,0,0.035) 0, transparent 24%),
+        radial-gradient(circle at 80% 0%, rgba(122,132,106,0.18) 0, transparent 28%),
+        radial-gradient(circle at 50% 90%, rgba(217,204,189,0.35) 0, transparent 32%);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+
+<header class="bg-[#f8f6f3]/85 backdrop-blur border-b border-black/5">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 h-20 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3">
+      <img src="/logo.png" alt="FOUND logo" width="36" height="36" />
+      <span class="text-2xl tracking-tight font-semibold">FOUND</span>
+    </a>
+    <button id="signOutBtn" type="button"
+            class="hidden text-sm text-neutral-600 hover:text-black">Sign out</button>
+  </div>
+</header>
+
+<main class="grain flex-1 px-5 md:px-8 py-12">
+  <div class="max-w-5xl mx-auto">
+
+    <!-- Loading -->
+    <div id="loadingState" class="text-center text-neutral-500 py-20">Loading…</div>
+
+    <!-- Not signed in / not authorized -->
+    <div id="gateCard" class="hidden bg-white border border-black/10 rounded-3xl shadow-sm p-8 md:p-10 text-center max-w-md mx-auto">
+      <h1 class="serif text-3xl tracking-tight mb-3" id="gateTitle">Admin access only.</h1>
+      <p class="text-neutral-600 mb-6" id="gateMsg">Sign in with an approved admin account to view early access stats.</p>
+      <a href="/login.html"
+         class="inline-block rounded-full bg-black text-white px-8 py-4 text-base font-medium hover:opacity-90 transition">
+        Sign in
+      </a>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="hidden">
+      <div class="flex items-end justify-between flex-wrap gap-3 mb-8">
+        <div>
+          <p class="text-xs uppercase tracking-[0.3em] text-neutral-400 mb-2">Internal</p>
+          <h1 class="serif text-4xl tracking-tight">Early access signups</h1>
+        </div>
+        <button id="refreshBtn" type="button"
+                class="rounded-full bg-white border border-black/10 px-5 py-2.5 text-sm font-medium hover:bg-[#efe9e1] transition">
+          Refresh
+        </button>
+      </div>
+
+      <!-- Stat cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+        <div class="bg-white border border-black/10 rounded-2xl p-5">
+          <p class="text-sm text-neutral-500 mb-1">Total signups</p>
+          <p class="text-3xl font-semibold" id="statTotal">—</p>
+        </div>
+        <div class="bg-white border border-black/10 rounded-2xl p-5">
+          <p class="text-sm text-neutral-500 mb-1">States</p>
+          <p class="text-3xl font-semibold" id="statStates">—</p>
+        </div>
+        <div class="bg-white border border-black/10 rounded-2xl p-5">
+          <p class="text-sm text-neutral-500 mb-1">ZIP codes</p>
+          <p class="text-3xl font-semibold" id="statZips">—</p>
+        </div>
+        <div class="bg-white border border-black/10 rounded-2xl p-5">
+          <p class="text-sm text-neutral-500 mb-1">Top area</p>
+          <p class="text-lg font-semibold leading-tight mt-1" id="statTopArea">—</p>
+        </div>
+      </div>
+
+      <!-- By state -->
+      <h2 class="serif text-2xl tracking-tight mb-3">By state</h2>
+      <div class="bg-white border border-black/10 rounded-2xl overflow-hidden mb-10">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-left text-neutral-500 border-b border-black/10">
+              <th class="px-5 py-3 font-medium">State</th>
+              <th class="px-5 py-3 font-medium text-right">Signups</th>
+              <th class="px-5 py-3 font-medium text-right">Share</th>
+            </tr>
+          </thead>
+          <tbody id="stateBody"></tbody>
+        </table>
+      </div>
+
+      <!-- By ZIP / city -->
+      <h2 class="serif text-2xl tracking-tight mb-3">By ZIP code</h2>
+      <div class="bg-white border border-black/10 rounded-2xl overflow-hidden">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-left text-neutral-500 border-b border-black/10">
+              <th class="px-5 py-3 font-medium">ZIP</th>
+              <th class="px-5 py-3 font-medium">City</th>
+              <th class="px-5 py-3 font-medium">State</th>
+              <th class="px-5 py-3 font-medium text-right">Signups</th>
+            </tr>
+          </thead>
+          <tbody id="zipBody"></tbody>
+        </table>
+      </div>
+
+      <!-- ── Early access people ─────────────────────────────────────── -->
+      <div class="flex items-end justify-between flex-wrap gap-3 mt-14 mb-3">
+        <div>
+          <h2 class="serif text-2xl tracking-tight">Early access people</h2>
+          <p class="text-sm text-neutral-500 mt-1" id="peopleSummary">—</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="flex rounded-full bg-white border border-black/10 p-1">
+            <button id="filterAll" type="button"
+                    class="rounded-full px-4 py-1.5 text-sm font-medium bg-black text-white">All</button>
+            <button id="filterDone" type="button"
+                    class="rounded-full px-4 py-1.5 text-sm font-medium text-neutral-600 hover:text-black">Completed</button>
+          </div>
+          <button id="exportBtn" type="button"
+                  class="rounded-full bg-white border border-black/10 px-5 py-2.5 text-sm font-medium hover:bg-[#efe9e1] transition">
+            Export CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- Setup / error notice -->
+      <div id="peopleNotice"
+           class="hidden bg-amber-50 border border-amber-200 text-amber-900 text-sm rounded-2xl px-5 py-4 mb-4"></div>
+
+      <!-- People table -->
+      <div id="peopleWrap" class="hidden bg-white border border-black/10 rounded-2xl overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-neutral-500 border-b border-black/10">
+                <th class="px-5 py-3 font-medium">Name</th>
+                <th class="px-5 py-3 font-medium">Email</th>
+                <th class="px-5 py-3 font-medium">Phone</th>
+                <th class="px-5 py-3 font-medium">Location</th>
+                <th class="px-5 py-3 font-medium">Profile</th>
+                <th class="px-5 py-3 font-medium">Joined</th>
+              </tr>
+            </thead>
+            <tbody id="peopleBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <p class="text-xs text-neutral-400 mt-6">
+        Live from the database. Counts every confirmed and unconfirmed account.
+        Tap any person to see their onboarding answers.
+      </p>
+    </div>
+
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/assets/auth.js"></script>
+<script>
+  const loadingEl   = document.getElementById('loadingState');
+  const gateCard    = document.getElementById('gateCard');
+  const gateTitle   = document.getElementById('gateTitle');
+  const gateMsg     = document.getElementById('gateMsg');
+  const dashboard   = document.getElementById('dashboard');
+  const signOutBtn  = document.getElementById('signOutBtn');
+  const refreshBtn  = document.getElementById('refreshBtn');
+
+  const statTotal   = document.getElementById('statTotal');
+  const statStates  = document.getElementById('statStates');
+  const statZips    = document.getElementById('statZips');
+  const statTopArea = document.getElementById('statTopArea');
+  const stateBody   = document.getElementById('stateBody');
+  const zipBody     = document.getElementById('zipBody');
+
+  const peopleSummary = document.getElementById('peopleSummary');
+  const peopleNotice  = document.getElementById('peopleNotice');
+  const peopleWrap    = document.getElementById('peopleWrap');
+  const peopleBody    = document.getElementById('peopleBody');
+  const filterAllBtn  = document.getElementById('filterAll');
+  const filterDoneBtn = document.getElementById('filterDone');
+  const exportBtn     = document.getElementById('exportBtn');
+
+  let allPeople    = [];
+  let peopleFilter = 'all';   // 'all' | 'done'
+
+  function showGate(title, msg) {
+    loadingEl.classList.add('hidden');
+    dashboard.classList.add('hidden');
+    gateTitle.textContent = title;
+    gateMsg.textContent   = msg;
+    gateCard.classList.remove('hidden');
+  }
+
+  function esc(v) {
+    return String(v ?? '').replace(/[&<>"]/g, (c) => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]
+    ));
+  }
+
+  function render(rows) {
+    const total = rows.reduce((s, r) => s + Number(r.signups || 0), 0);
+
+    // ── Aggregate by state ──
+    const byState = {};
+    rows.forEach((r) => {
+      const st = r.state || '—';
+      byState[st] = (byState[st] || 0) + Number(r.signups || 0);
+    });
+    const stateRows = Object.entries(byState).sort((a, b) => b[1] - a[1]);
+
+    statTotal.textContent  = total.toLocaleString();
+    statStates.textContent = stateRows.filter(([s]) => s !== '—').length || stateRows.length;
+    statZips.textContent   = new Set(rows.map((r) => r.zip).filter((z) => z && z !== '—')).size;
+
+    const top = rows[0];
+    statTopArea.textContent = top
+      ? `${top.city && top.city !== '—' ? top.city + ', ' : ''}${top.state} (${top.signups})`
+      : '—';
+
+    stateBody.innerHTML = stateRows.map(([st, n]) => `
+      <tr class="border-b border-black/5 last:border-0">
+        <td class="px-5 py-3">${esc(st)}</td>
+        <td class="px-5 py-3 text-right font-medium">${n.toLocaleString()}</td>
+        <td class="px-5 py-3 text-right text-neutral-500">${total ? Math.round((n / total) * 100) : 0}%</td>
+      </tr>`).join('') || `<tr><td colspan="3" class="px-5 py-6 text-center text-neutral-400">No signups yet.</td></tr>`;
+
+    zipBody.innerHTML = rows.map((r) => `
+      <tr class="border-b border-black/5 last:border-0">
+        <td class="px-5 py-3 font-medium">${esc(r.zip)}</td>
+        <td class="px-5 py-3">${esc(r.city)}</td>
+        <td class="px-5 py-3">${esc(r.state)}</td>
+        <td class="px-5 py-3 text-right font-medium">${Number(r.signups).toLocaleString()}</td>
+      </tr>`).join('') || `<tr><td colspan="4" class="px-5 py-6 text-center text-neutral-400">No signups yet.</td></tr>`;
+  }
+
+  async function loadStats() {
+    const { data, error } = await window._supabase.rpc('early_access_stats');
+    if (error) {
+      const msg = (error.message || '').toLowerCase();
+      if (msg.includes('not authorized')) {
+        showGate('Not authorized.', 'This account is not on the FOUND admin allowlist. Sign in with an approved admin email.');
+      } else {
+        showGate('Could not load stats.', error.message || 'Something went wrong. Try again.');
+      }
+      return false;
+    }
+    loadingEl.classList.add('hidden');
+    gateCard.classList.add('hidden');
+    dashboard.classList.remove('hidden');
+    signOutBtn.classList.remove('hidden');
+    render(data || []);
+    return true;
+  }
+
+  // ── Early access people ───────────────────────────────────────────────
+
+  // The 9 onboarding answers, in display order, mapped to row columns.
+  const DETAIL_FIELDS = [
+    ['Stage of life',  'life_stage'],
+    ['Loves to do',    'activities'],
+    ['Where from',     'where_from'],
+    ['Home values',    'family_values'],
+    ['Kids schooling', 'school_types'],
+    ['Love language',  'love_language'],
+    ['Initiator',      'initiator'],
+    ['Personality',    'personality'],
+    ['Hoping to find', 'hoping_to_find'],
+  ];
+
+  // Display a value cleanly — arrays become comma lists, blanks become a dash.
+  function fmt(v) {
+    if (Array.isArray(v)) return v.length ? v.join(', ') : '—';
+    const s = String(v ?? '').trim();
+    return s || '—';
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    if (isNaN(d)) return '—';
+    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function locationOf(p) {
+    const cityState = [p.city, p.state].filter((x) => x && String(x).trim()).join(', ');
+    if (cityState && p.zip) return `${cityState} ${p.zip}`;
+    return cityState || p.zip || '—';
+  }
+
+  function detailHTML(p) {
+    const rows = DETAIL_FIELDS.map(([label, key]) => `
+      <div>
+        <dt class="text-xs uppercase tracking-wider text-neutral-400 mb-0.5">${esc(label)}</dt>
+        <dd class="text-sm">${esc(fmt(p[key]))}</dd>
+      </div>`).join('');
+    return `<dl class="grid sm:grid-cols-2 gap-x-8 gap-y-4 p-5 bg-[#f8f6f3] rounded-xl">${rows}</dl>`;
+  }
+
+  function showPeopleNotice(text) {
+    peopleNotice.textContent = text;
+    peopleNotice.classList.remove('hidden');
+    peopleWrap.classList.add('hidden');
+    peopleSummary.textContent = '—';
+    exportBtn.disabled = true;
+    exportBtn.classList.add('opacity-40', 'cursor-not-allowed');
+  }
+
+  function renderPeople() {
+    const list = peopleFilter === 'done'
+      ? allPeople.filter((p) => p.profile_completed)
+      : allPeople;
+
+    const completed = allPeople.filter((p) => p.profile_completed).length;
+    peopleSummary.textContent =
+      `${allPeople.length} ${allPeople.length === 1 ? 'signup' : 'signups'} · ${completed} completed their profile`;
+
+    if (!list.length) {
+      peopleBody.innerHTML =
+        `<tr><td colspan="6" class="px-5 py-8 text-center text-neutral-400">No ${
+          peopleFilter === 'done' ? 'completed profiles' : 'signups'} yet.</td></tr>`;
+      return;
+    }
+
+    peopleBody.innerHTML = list.map((p, i) => {
+      const name  = foundAuth.titleCaseName(p.full_name) || '—';
+      const badge = p.profile_completed
+        ? '<span class="text-xs px-2.5 py-1 rounded-full bg-[#7a846a]/15 text-[#5a6450]">Complete</span>'
+        : '<span class="text-xs px-2.5 py-1 rounded-full bg-black/5 text-neutral-500">Pending</span>';
+      return `
+        <tr class="people-row border-b border-black/5 cursor-pointer hover:bg-[#f8f6f3]" data-idx="${i}">
+          <td class="px-5 py-3 font-medium whitespace-nowrap">${esc(name)}</td>
+          <td class="px-5 py-3 text-neutral-600">${esc(p.email || '—')}</td>
+          <td class="px-5 py-3 text-neutral-600 whitespace-nowrap">${esc(p.phone || '—')}</td>
+          <td class="px-5 py-3 text-neutral-600 whitespace-nowrap">${esc(locationOf(p))}</td>
+          <td class="px-5 py-3">${badge}</td>
+          <td class="px-5 py-3 text-neutral-500 whitespace-nowrap">${esc(fmtDate(p.created_at))}</td>
+        </tr>
+        <tr class="people-detail hidden" data-detail="${i}">
+          <td colspan="6" class="px-5 pb-5 pt-0">${detailHTML(p)}</td>
+        </tr>`;
+    }).join('');
+  }
+
+  function setPeopleFilter(mode) {
+    peopleFilter = mode;
+    const on  = 'rounded-full px-4 py-1.5 text-sm font-medium bg-black text-white';
+    const off = 'rounded-full px-4 py-1.5 text-sm font-medium text-neutral-600 hover:text-black';
+    filterAllBtn.className  = mode === 'all'  ? on : off;
+    filterDoneBtn.className = mode === 'done' ? on : off;
+    renderPeople();
+  }
+
+  // ── CSV export ────────────────────────────────────────────────────────
+  function csvCell(v) {
+    const s = Array.isArray(v) ? v.join('; ') : String(v ?? '');
+    return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  }
+
+  function toCSV(people) {
+    const headers = [
+      'Name', 'Email', 'Phone', 'ZIP', 'City', 'State',
+      'Stage of life', 'Loves to do', 'Where from', 'Home values',
+      'Kids schooling', 'Love language', 'Initiator', 'Personality',
+      'Hoping to find', 'Profile completed', 'Joined',
+    ];
+    const lines = [headers.map(csvCell).join(',')];
+    people.forEach((p) => {
+      lines.push([
+        foundAuth.titleCaseName(p.full_name) || '',
+        p.email || '', p.phone || '', p.zip || '', p.city || '', p.state || '',
+        p.life_stage || '', p.activities || [], p.where_from || '',
+        p.family_values || [], p.school_types || [], p.love_language || '',
+        p.initiator || '', p.personality || '', p.hoping_to_find || [],
+        p.profile_completed ? 'Yes' : 'No',
+        p.created_at ? new Date(p.created_at).toISOString() : '',
+      ].map(csvCell).join(','));
+    });
+    return lines.join('\r\n');
+  }
+
+  function downloadCSV() {
+    if (!allPeople.length) return;
+    // BOM so Excel reads UTF-8 correctly.
+    const blob = new Blob(['\ufeff' + toCSV(allPeople)], { type: 'text/csv;charset=utf-8;' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    a.download = `found-early-access-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  async function loadPeople() {
+    const { data, error } = await window._supabase.rpc('early_access_admin');
+    if (error) {
+      const msg  = (error.message || '').toLowerCase();
+      const code = error.code || '';
+      // RPC missing = early-access-profile.sql has not been run yet.
+      if (code === 'PGRST202' || msg.includes('could not find') ||
+          msg.includes('does not exist') || msg.includes('schema cache')) {
+        showPeopleNotice(
+          'The early-access table isn\u2019t set up yet. Run _supabase/early-access-profile.sql ' +
+          'in the Supabase SQL editor, then hit Refresh.');
+      } else if (msg.includes('not authorized')) {
+        showPeopleNotice(
+          'This account can see signup stats but is not on the early-access export allowlist.');
+      } else {
+        showPeopleNotice(error.message || 'Could not load early-access people.');
+      }
+      return;
+    }
+    peopleNotice.classList.add('hidden');
+    peopleWrap.classList.remove('hidden');
+    exportBtn.disabled = false;
+    exportBtn.classList.remove('opacity-40', 'cursor-not-allowed');
+    allPeople = data || [];
+    renderPeople();
+  }
+
+  // Expand / collapse a person's onboarding answers on row click.
+  peopleBody.addEventListener('click', (e) => {
+    const row = e.target.closest('.people-row');
+    if (!row) return;
+    const idx = row.getAttribute('data-idx');
+    const detail = peopleBody.querySelector(`.people-detail[data-detail="${idx}"]`);
+    if (detail) detail.classList.toggle('hidden');
+  });
+
+  filterAllBtn.addEventListener('click', () => setPeopleFilter('all'));
+  filterDoneBtn.addEventListener('click', () => setPeopleFilter('done'));
+  exportBtn.addEventListener('click', downloadCSV);
+
+  (async () => {
+    const session = await foundAuth.getSession();
+    if (!session) {
+      showGate('Admin access only.', 'Sign in with an approved admin account to view early access stats.');
+      return;
+    }
+    const ok = await loadStats();
+    if (ok) await loadPeople();
+  })();
+
+  refreshBtn.addEventListener('click', async () => {
+    refreshBtn.disabled = true;
+    refreshBtn.textContent = 'Refreshing…';
+    const ok = await loadStats();
+    if (ok) await loadPeople();
+    refreshBtn.disabled = false;
+    refreshBtn.textContent = 'Refresh';
+  });
+
+  signOutBtn.addEventListener('click', async () => {
+    await foundAuth.signOut();
+    window.location.replace('/');
+  });
+</script>
+
+</body>
+</html>

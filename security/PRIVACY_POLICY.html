@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Privacy Policy — FOUND</title>
+<meta name="robots" content="index, follow" />
+<style>
+  :root { color-scheme: light dark; }
+  body { font: 16px/1.6 -apple-system, system-ui, sans-serif; max-width: 760px; margin: 2rem auto; padding: 0 1.25rem; color: #1a1a1a; }
+  @media (prefers-color-scheme: dark) { body { background:#0e0e10; color:#eaeaea } a { color:#7cb6ff } }
+  h1 { font-size: 1.85rem; margin-bottom: .25rem; }
+  h2 { margin-top: 2rem; font-size: 1.2rem; }
+  h3 { font-size: 1rem; margin-top: 1.5rem; }
+  p, li { margin: .5rem 0; }
+  small { color: #666; }
+  table { border-collapse: collapse; width: 100%; margin: .75rem 0; }
+  th, td { border: 1px solid #ddd; padding: .5rem .6rem; text-align: left; vertical-align: top; }
+  @media (prefers-color-scheme: dark) { th, td { border-color: #333 } }
+</style>
+</head>
+<body>
+
+<h1>Privacy Policy</h1>
+<small>Last updated: May 25, 2026 · Effective: May 25, 2026</small>
+
+<p>FOUND ("we", "us", "our") operates the FOUND mobile app and the website at <strong>found.community</strong>. This policy explains what data we collect, why, who we share it with, and the rights you have over it. We wrote it to be readable. If something here is unclear, email <a href="mailto:privacy@found.community">privacy@found.community</a>.</p>
+
+<h2>1. Who we are</h2>
+<p>FOUND is operated by Ryder Scott. Contact: <a href="mailto:privacy@found.community">privacy@found.community</a>. For security reports, see <a href="/.well-known/security.txt">/.well-known/security.txt</a>.</p>
+
+<h2>2. The short version</h2>
+<ul>
+  <li>We collect what we need to run the app — account, profile, location, photos, messages — and no more.</li>
+  <li>We do <strong>not</strong> sell your data. We do <strong>not</strong> show third-party ads. We do <strong>not</strong> use third-party trackers.</li>
+  <li>Your religious affiliation is treated as <em>special category data</em> and is only processed because you choose to share it with us.</li>
+  <li>You can delete your account at any time from inside the app (Settings → Delete Account). Deletion is permanent.</li>
+</ul>
+
+<h2>3. What we collect</h2>
+<table>
+  <tr><th>Category</th><th>Examples</th><th>Why</th></tr>
+  <tr><td>Account</td><td>Email, password hash, sign-up date</td><td>Authentication, account recovery</td></tr>
+  <tr><td>Profile</td><td>Name, age, gender, photos, bio, church, religious affiliation, life stage, values, school type</td><td>To show your profile to other members and match you with people nearby</td></tr>
+  <tr><td>Location</td><td>City, region, country, coarse coordinates derived from a ZIP code you enter at sign-up</td><td>To show local connections. We do not track your precise device GPS.</td></tr>
+  <tr><td>Content</td><td>Direct messages, group posts, group photos, profile photos, reports</td><td>To deliver the social features of the app</td></tr>
+  <tr><td>Device</td><td>App version, OS, push notification token, crash logs</td><td>To deliver notifications, diagnose crashes</td></tr>
+  <tr><td>Usage</td><td>Sign-in events, error logs (via Sentry), rate-limit events (via Cloudflare)</td><td>Security, abuse detection</td></tr>
+</table>
+
+<p><strong>What we do not collect:</strong> precise GPS coordinates, contacts list, calendar, microphone audio, third-party advertising IDs, or browsing history outside the app.</p>
+
+<h2>4. Special category data</h2>
+<p>Religious affiliation, denomination, and church membership are <em>special category data</em> under GDPR Article 9 and similar laws. We process this only with your explicit consent — which you give by entering it in onboarding. You can clear these fields at any time in Profile settings. We never disclose them to advertisers, brokers, or any third party.</p>
+
+<h2>5. Photos</h2>
+<p>Photos you upload are stored in our cloud storage (Supabase). Before upload, our app strips EXIF metadata — including GPS coordinates, device model, and capture timestamps — so other members cannot derive your home address from a photo.</p>
+<p>All uploaded photos are scanned for child sexual abuse material (CSAM) using industry-standard hashing (Thorn Safer). Confirmed matches are quarantined, the offending account is terminated, and a report is filed with the National Center for Missing &amp; Exploited Children (NCMEC) as required by federal law (18 U.S.C. § 2258A).</p>
+
+<h2>6. How we use your data</h2>
+<ul>
+  <li>To provide the FOUND service (match, message, group features).</li>
+  <li>To send transactional emails (sign-in links, account notices, security alerts).</li>
+  <li>To prevent abuse (rate limiting, fraud detection, account safety).</li>
+  <li>To fix bugs and improve reliability (aggregated crash analytics).</li>
+  <li>To comply with law (e.g., respond to lawful subpoenas, mandatory CSAM reporting).</li>
+</ul>
+<p>We do <strong>not</strong> use your data to train AI models. We do <strong>not</strong> serve advertising. We do <strong>not</strong> sell or rent personal data.</p>
+
+<h2>7. Who we share data with</h2>
+<p>We use a small set of trusted processors, each under a Data Processing Agreement:</p>
+<ul>
+  <li><strong>Supabase</strong> — database, authentication, storage hosting.</li>
+  <li><strong>Netlify</strong> — website hosting.</li>
+  <li><strong>Resend</strong> — transactional email delivery.</li>
+  <li><strong>Cloudflare</strong> — DNS, DDoS protection, WAF.</li>
+  <li><strong>Sentry</strong> — error tracking (PII scrubbed before transmission).</li>
+  <li><strong>Thorn (Safer)</strong> — CSAM image hash matching.</li>
+  <li><strong>Apple Push Notification service, Google Firebase Cloud Messaging</strong> — push delivery.</li>
+</ul>
+<p>We do not share with marketers, data brokers, or analytics platforms beyond what is listed here.</p>
+
+<h2>8. Where your data lives</h2>
+<p>Data is stored on servers operated by the processors above, primarily in the United States. If you access the service from the EU or UK, your data is transferred to the US under appropriate safeguards (Standard Contractual Clauses).</p>
+
+<h2>9. How long we keep it</h2>
+<table>
+  <tr><th>Data</th><th>Retention</th></tr>
+  <tr><td>Account + profile</td><td>While your account is active. Deleted within 30 days of account deletion.</td></tr>
+  <tr><td>Direct messages</td><td>Until you or the other party deletes them, or the account is deleted.</td></tr>
+  <tr><td>Backups</td><td>Encrypted backups rotate every 30 days. Deleted accounts purge from backups on next rotation.</td></tr>
+  <tr><td>Crash logs / error events</td><td>90 days.</td></tr>
+  <tr><td>Abuse / safety logs</td><td>1 year (for repeat-offender detection).</td></tr>
+  <tr><td>CSAM evidence</td><td>Preserved as required by 18 U.S.C. § 2258A.</td></tr>
+</table>
+
+<h2>10. Your rights</h2>
+<p>Wherever you live, you can:</p>
+<ul>
+  <li>Access your data (in-app profile + email <a href="mailto:privacy@found.community">privacy@found.community</a> for a full export).</li>
+  <li>Correct your data in Profile settings.</li>
+  <li>Delete your account (Settings → Delete Account).</li>
+  <li>Object to or restrict processing.</li>
+  <li>Withdraw consent for special-category data (clear the religious fields in your profile).</li>
+</ul>
+<p>EU/UK users have rights under GDPR and may lodge a complaint with their local Data Protection Authority. California residents have rights under CCPA/CPRA, including the right to know, delete, correct, and not be discriminated against for exercising these rights. We do not sell or share personal information as those terms are defined under CCPA.</p>
+
+<h2>11. Children</h2>
+<p>FOUND is not intended for users under 13. We do not knowingly collect data from children under 13. If you believe a child under 13 has created an account, email <a href="mailto:privacy@found.community">privacy@found.community</a> and we will remove it. Users aged 13–17 should have parental consent.</p>
+
+<h2>12. Security</h2>
+<p>We use industry-standard practices: encrypted transport (HTTPS/TLS), encrypted device session storage (iOS Keychain / Android Keystore), database row-level security, rate limiting, error monitoring, and a vulnerability disclosure program (<a href="/.well-known/security.txt">.well-known/security.txt</a>). No system is perfectly secure. In the event of a breach, we notify affected users without undue delay and within the timelines required by GDPR (72 hours) and state breach-notification laws.</p>
+
+<h2>13. Changes</h2>
+<p>If we make a material change, we will notify you in the app and update the "Last updated" date above. Continuing to use FOUND after a change constitutes acceptance.</p>
+
+<h2>14. Contact</h2>
+<p>Privacy questions: <a href="mailto:privacy@found.community">privacy@found.community</a><br>
+Security reports: <a href="mailto:security@found.community">security@found.community</a><br>
+General contact: <a href="mailto:hello@found.community">hello@found.community</a></p>
+
+</body>
+</html>

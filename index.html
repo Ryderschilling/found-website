@@ -11,10 +11,13 @@
     content="FOUND helps Christians find real local community through shared faith, life stage, interests, and values."
   />
 
+  <!-- Favicons / app icons — FOUND brand mark -->
   <link rel="icon" href="/favicon.ico" sizes="any">
-  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <meta name="theme-color" content="#000000">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#111111">
 
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -39,8 +42,41 @@
     .phone-shadow { box-shadow: 0 30px 90px rgba(0,0,0,0.18); }
 
     .modal-hidden { display: none; }
-
     .modal-visible { display: flex; }
+
+    /* ── Animations ──────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-9px); }
+    }
+
+    .hero-anim {
+      opacity: 0;
+      animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .phone-float {
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
   </style>
 </head>
 
@@ -48,96 +84,115 @@
 
 <header class="fixed top-0 left-0 right-0 z-50 bg-[#f8f6f3]/85 backdrop-blur border-b border-black/5">
   <div class="max-w-7xl mx-auto px-5 md:px-8 h-20 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <img src="favicon.png" class="w-10 h-10 rounded-full" alt="FOUND Logo">
+    <!-- Logo -->
+    <a href="/" class="flex items-center gap-3">
+      <img src="/logo.png" alt="FOUND logo" width="40" height="40" />
       <span class="text-2xl tracking-tight font-semibold">FOUND</span>
-    </div>
+    </a>
 
+    <!-- Section nav (desktop) -->
     <nav class="hidden md:flex items-center gap-8 text-sm text-neutral-600">
-      <a href="#how" class="hover:text-black">How it works</a>
-      <a href="#churches" class="hover:text-black">For churches</a>
-      <button type="button" data-open-waitlist class="hover:text-black">Join waitlist</button>
+      <a href="#how" class="hover:text-black transition">How it works</a>
+      <a href="#churches" class="hover:text-black transition">For churches</a>
+      <a href="/signup.html" class="hover:text-black transition">Join waitlist</a>
     </nav>
 
-    <button type="button" data-open-waitlist class="rounded-full bg-black text-white px-5 py-3 text-sm font-medium hover:opacity-90 transition">
-      Get Early Access
-    </button>
+    <!-- CTA: swaps based on auth session (handled by auth.js) -->
+    <div class="flex items-center">
+      <a href="/signup.html" data-cta-when-logged-out
+         class="rounded-full bg-black text-white px-5 py-3 text-sm font-medium hover:opacity-90 transition">
+        Get Early Access
+      </a>
+
+      <a href="/account.html" data-cta-when-logged-in
+         class="hidden items-center gap-3 rounded-full bg-black text-white pl-1.5 pr-5 h-12 text-sm font-medium hover:opacity-90 transition">
+        <span class="w-9 h-9 rounded-full bg-white text-black inline-flex items-center justify-center text-sm font-semibold leading-none" data-initials>··</span>
+        <span class="leading-none">My Account</span>
+      </a>
+    </div>
   </div>
 </header>
 
 <main>
 
-<section class="grain pt-32 md:pt-40 pb-20 md:pb-28 px-5 md:px-8 overflow-hidden">
-  <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-14 items-center">
-    <div>
-      <div class="inline-flex items-center gap-2 rounded-full bg-white/70 border border-black/10 px-4 py-2 text-sm text-neutral-700 mb-8">
+<!-- ── Hero ──────────────────────────────────────────────── -->
+<section class="grain pt-28 md:pt-32 pb-12 md:pb-16 px-5 md:px-8 overflow-hidden">
+  <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-10 items-center">
+    <div class="hero-stagger">
+      <div class="inline-flex items-center gap-2 rounded-full bg-white/70 border border-black/10 px-4 py-2 text-sm text-neutral-700 mb-5">
         <span class="w-2 h-2 rounded-full bg-[#7a846a]"></span>
         Real. Christian. Community.
       </div>
 
-      <h1 class="serif text-6xl md:text-7xl lg:text-8xl leading-[0.95] tracking-tight mb-8">
+      <h1 class="serif text-5xl md:text-6xl lg:text-7xl leading-[1.0] tracking-tight mb-5">
         Find your people.
       </h1>
 
-      <p class="text-xl md:text-2xl text-neutral-700 leading-relaxed max-w-xl mb-8">
+      <p class="text-lg md:text-xl text-neutral-700 leading-relaxed max-w-xl mb-4">
         FOUND helps Christians discover like-minded people nearby who share their faith, life stage, interests, and desire to go deeper.
       </p>
 
-      <p class="text-lg text-neutral-500 max-w-xl mb-10">
+      <p class="text-base text-neutral-500 max-w-xl mb-7">
         Because we all need people to run with.
       </p>
 
-      <div class="flex flex-col sm:flex-row gap-4">
-        <button type="button" data-open-waitlist class="rounded-full bg-black text-white px-8 py-4 text-center text-lg font-medium hover:opacity-90 transition">
-          Join the Waitlist
-        </button>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <a href="/signup.html" class="rounded-full bg-black text-white px-7 py-3.5 text-center text-base font-medium hover:opacity-90 transition">
+          Get Early Access
+        </a>
 
-        <a href="#how" class="rounded-full bg-white border border-black/10 px-8 py-4 text-center text-lg font-medium hover:bg-[#efe9e1] transition">
+        <a href="#how" class="rounded-full bg-white border border-black/10 px-7 py-3.5 text-center text-base font-medium hover:bg-[#efe9e1] transition">
           See How It Works
         </a>
       </div>
+
+      <p class="text-sm text-neutral-500 mt-4">
+        Already have an account?
+        <a href="/login.html" class="underline underline-offset-2 hover:text-black">Sign in</a>
+      </p>
     </div>
 
-    <div class="relative flex justify-center lg:justify-end">
-      <div class="relative w-[320px] bg-white rounded-[42px] border border-black/10 phone-shadow p-5">
-        <div class="rounded-[32px] bg-[#faf9f7] min-h-[650px] p-7 flex flex-col justify-between">
+    <div class="relative flex justify-center lg:justify-end hero-anim" style="animation-delay:0.2s">
+      <div class="relative w-[280px] bg-white rounded-[38px] border border-black/10 phone-shadow p-4 phone-float">
+        <div class="rounded-[28px] bg-[#faf9f7] min-h-[460px] p-6 flex flex-col justify-between">
           <div>
-            <div class="text-xs uppercase tracking-[0.3em] text-neutral-400 mb-8">
+            <div class="text-xs uppercase tracking-[0.3em] text-neutral-400 mb-4">
               Found Community
             </div>
 
-            <h2 class="serif text-4xl leading-tight mb-5">
+            <h2 class="serif text-2xl leading-tight mb-3">
               People you may run with
             </h2>
 
-            <div class="space-y-4 mt-8">
-              <div class="bg-white border border-black/10 rounded-3xl p-5">
-                <div class="w-14 h-14 rounded-full bg-[#d9ccbd] mb-4"></div>
-                <h3 class="font-semibold text-xl">Jake & Hannah</h3>
-                <p class="text-sm text-neutral-500 mb-3">Pensacola, FL</p>
-                <p class="text-neutral-700">Young family • Beach days • Bible study</p>
+            <div class="space-y-2.5 mt-4">
+              <div class="bg-white border border-black/10 rounded-3xl p-4">
+                <div class="w-10 h-10 rounded-full bg-[#d9ccbd] mb-2"></div>
+                <h3 class="font-semibold text-base">Jake &amp; Hannah</h3>
+                <p class="text-sm text-neutral-500 mb-1">Pensacola, FL</p>
+                <p class="text-sm text-neutral-700">Young family • Beach days • Bible study</p>
               </div>
 
-              <div class="bg-white border border-black/10 rounded-3xl p-5">
-                <div class="w-14 h-14 rounded-full bg-[#7a846a]/30 mb-4"></div>
-                <h3 class="font-semibold text-xl">Megan Roberts</h3>
-                <p class="text-sm text-neutral-500 mb-3">Gulf Breeze, FL</p>
-                <p class="text-neutral-700">Coffee shops • Women’s group • New to town</p>
+              <div class="bg-white border border-black/10 rounded-3xl p-4">
+                <div class="w-10 h-10 rounded-full bg-[#7a846a]/30 mb-2"></div>
+                <h3 class="font-semibold text-base">Megan Roberts</h3>
+                <p class="text-sm text-neutral-500 mb-1">Gulf Breeze, FL</p>
+                <p class="text-sm text-neutral-700">Coffee shops • Women’s group • New to town</p>
               </div>
             </div>
           </div>
 
-          <button type="button" data-open-waitlist class="w-full bg-black text-white rounded-full py-4 text-lg mt-8">
+          <a href="/signup.html" class="block w-full bg-black text-white rounded-full py-3 text-center text-sm mt-4">
             Invite to Connect
-          </button>
+          </a>
         </div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- ── Pain point ────────────────────────────────────────── -->
 <section class="py-20 md:py-28 px-5 md:px-8 bg-white">
-  <div class="max-w-6xl mx-auto text-center">
+  <div class="max-w-6xl mx-auto text-center reveal">
     <p class="text-sm uppercase tracking-[0.3em] text-neutral-400 mb-5">
       The pain point
     </p>
@@ -152,9 +207,10 @@
   </div>
 </section>
 
-<section id="how" class="py-20 md:py-28 px-5 md:px-8">
+<!-- ── How it works ──────────────────────────────────────── -->
+<section id="how" class="py-20 md:py-28 px-5 md:px-8 scroll-mt-24">
   <div class="max-w-7xl mx-auto">
-    <div class="max-w-2xl mb-14">
+    <div class="max-w-2xl mb-14 reveal">
       <p class="text-sm uppercase tracking-[0.3em] text-neutral-400 mb-5">
         How it works
       </p>
@@ -165,7 +221,7 @@
     </div>
 
     <div class="grid md:grid-cols-3 gap-5">
-      <div class="bg-white rounded-[32px] p-8 border border-black/5">
+      <div class="bg-white rounded-[32px] p-8 border border-black/5 reveal">
         <div class="text-5xl serif mb-8">01</div>
         <h3 class="text-2xl font-semibold mb-4">Answer a few questions</h3>
         <p class="text-neutral-600 leading-relaxed">
@@ -173,7 +229,7 @@
         </p>
       </div>
 
-      <div class="bg-white rounded-[32px] p-8 border border-black/5">
+      <div class="bg-white rounded-[32px] p-8 border border-black/5 reveal reveal-delay-1">
         <div class="text-5xl serif mb-8">02</div>
         <h3 class="text-2xl font-semibold mb-4">Discover like-minded people</h3>
         <p class="text-neutral-600 leading-relaxed">
@@ -181,7 +237,7 @@
         </p>
       </div>
 
-      <div class="bg-white rounded-[32px] p-8 border border-black/5">
+      <div class="bg-white rounded-[32px] p-8 border border-black/5 reveal reveal-delay-2">
         <div class="text-5xl serif mb-8">03</div>
         <h3 class="text-2xl font-semibold mb-4">Build real relationships</h3>
         <p class="text-neutral-600 leading-relaxed">
@@ -192,8 +248,9 @@
   </div>
 </section>
 
-<section id="churches" class="py-20 md:py-28 px-5 md:px-8 bg-[#111111] text-white">
-  <div class="max-w-7xl mx-auto text-center">
+<!-- ── For churches ──────────────────────────────────────── -->
+<section id="churches" class="py-20 md:py-28 px-5 md:px-8 bg-[#111111] text-white scroll-mt-24">
+  <div class="max-w-7xl mx-auto text-center reveal">
     <p class="text-sm uppercase tracking-[0.3em] text-white/40 mb-5">
       For churches
     </p>
@@ -208,8 +265,9 @@
   </div>
 </section>
 
-<section id="waitlist" class="py-20 md:py-28 px-5 md:px-8">
-  <div class="max-w-4xl mx-auto bg-white rounded-[44px] border border-black/5 p-8 md:p-14 text-center">
+<!-- ── Waitlist / Coming soon ────────────────────────────── -->
+<section id="waitlist" class="py-20 md:py-28 px-5 md:px-8 scroll-mt-24">
+  <div class="max-w-4xl mx-auto bg-white rounded-[44px] border border-black/5 p-8 md:p-14 text-center reveal">
     <p class="text-sm uppercase tracking-[0.3em] text-neutral-400 mb-5">
       Coming soon
     </p>
@@ -222,15 +280,16 @@
       Join the early access list and we’ll keep you updated as FOUND launches.
     </p>
 
-    <button type="button" data-open-waitlist class="rounded-full bg-black text-white px-8 py-4 font-medium hover:opacity-90 transition">
-      Join the Waitlist
-    </button>
+    <a href="/signup.html" class="inline-block rounded-full bg-black text-white px-8 py-4 font-medium hover:opacity-90 transition">
+      Get Early Access
+    </a>
   </div>
 </section>
 
-<section id="support" class="py-20 md:py-28 px-5 md:px-8 bg-white">
+<!-- ── Support the mission ───────────────────────────────── -->
+<section id="support" class="py-20 md:py-28 px-5 md:px-8 bg-white scroll-mt-24">
   <div class="max-w-7xl mx-auto">
-    <div class="max-w-3xl mx-auto text-center mb-14">
+    <div class="max-w-3xl mx-auto text-center mb-14 reveal">
       <p class="text-sm uppercase tracking-[0.3em] text-neutral-400 mb-5">
         Support the mission
       </p>
@@ -241,27 +300,37 @@
     </div>
 
     <div class="grid md:grid-cols-3 gap-5">
-      <div class="bg-[#f8f6f3] rounded-[32px] p-8 border border-black/5">
-        <h3 class="text-2xl font-semibold mb-4">Give</h3>
+      <div class="bg-[#f8f6f3] rounded-[32px] p-8 border border-black/5 reveal">
+        <h3 class="text-2xl font-semibold mb-3">Give</h3>
         <p class="text-neutral-600 mb-8">Support early development and launch.</p>
-        <a href="mailto:foundcommunityapp@gmail.com?subject=I%20want%20to%20give%20to%20FOUND" class="inline-flex rounded-full bg-black text-white px-6 py-3 font-medium hover:opacity-90 transition">Give Support</a>
+        <button type="button" data-open-contact data-type="give"
+                class="rounded-full bg-black text-white px-6 py-3 font-medium hover:opacity-90 transition">
+          Give Support
+        </button>
       </div>
 
-      <div class="bg-[#f8f6f3] rounded-[32px] p-8 border border-black/5">
-        <h3 class="text-2xl font-semibold mb-4">Invest</h3>
+      <div class="bg-[#f8f6f3] rounded-[32px] p-8 border border-black/5 reveal reveal-delay-1">
+        <h3 class="text-2xl font-semibold mb-3">Invest</h3>
         <p class="text-neutral-600 mb-8">Interested in helping fund the vision?</p>
-        <a href="mailto:foundcommunityapp@gmail.com?subject=Investment%20Interest%20in%20FOUND" class="inline-flex rounded-full bg-black text-white px-6 py-3 font-medium hover:opacity-90 transition">Investor Interest</a>
+        <button type="button" data-open-contact data-type="invest"
+                class="rounded-full bg-black text-white px-6 py-3 font-medium hover:opacity-90 transition">
+          Investor Interest
+        </button>
       </div>
 
-      <div class="bg-[#f8f6f3] rounded-[32px] p-8 border border-black/5">
-        <h3 class="text-2xl font-semibold mb-4">Donate</h3>
+      <div class="bg-[#f8f6f3] rounded-[32px] p-8 border border-black/5 reveal reveal-delay-2">
+        <h3 class="text-2xl font-semibold mb-3">Donate</h3>
         <p class="text-neutral-600 mb-8">Help accelerate the launch of FOUND.</p>
-        <a href="mailto:foundcommunityapp@gmail.com?subject=I%20want%20to%20donate%20to%20FOUND" class="inline-flex rounded-full bg-black text-white px-6 py-3 font-medium hover:opacity-90 transition">Donate</a>
+        <button type="button" data-open-contact data-type="donate"
+                class="rounded-full bg-black text-white px-6 py-3 font-medium hover:opacity-90 transition">
+          Donate
+        </button>
       </div>
     </div>
   </div>
 </section>
 
+<!-- ── Follow the journey ────────────────────────────────── -->
 <section class="py-10 px-5 md:px-8 bg-[#f8f6f3] border-t border-black/5">
   <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-5">
     <div>
@@ -275,25 +344,25 @@
     </div>
 
     <div class="flex items-center gap-4 flex-wrap justify-center">
-      <a href="https://instagram.com/foundcommunity_" target="_blank" aria-label="FOUND Instagram" class="w-14 h-14 rounded-full bg-white border border-black/10 flex items-center justify-center hover:bg-black hover:text-white transition">
+      <a href="https://instagram.com/foundcommunity_" target="_blank" rel="noopener" aria-label="FOUND Instagram" class="w-14 h-14 rounded-full bg-white border border-black/10 flex items-center justify-center hover:bg-black hover:text-white transition">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
           <path d="M7.75 2h8.5A5.76 5.76 0 0 1 22 7.75v8.5A5.76 5.76 0 0 1 16.25 22h-8.5A5.76 5.76 0 0 1 2 16.25v-8.5A5.76 5.76 0 0 1 7.75 2Zm0 2A3.75 3.75 0 0 0 4 7.75v8.5A3.75 3.75 0 0 0 7.75 20h8.5A3.75 3.75 0 0 0 20 16.25v-8.5A3.75 3.75 0 0 0 16.25 4h-8.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm4.75-3.35a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2Z" />
         </svg>
       </a>
 
-      <a href="https://tiktok.com/@foundcommunity_" target="_blank" aria-label="FOUND TikTok" class="w-14 h-14 rounded-full bg-white border border-black/10 flex items-center justify-center hover:bg-black hover:text-white transition">
+      <a href="https://tiktok.com/@foundcommunity_" target="_blank" rel="noopener" aria-label="FOUND TikTok" class="w-14 h-14 rounded-full bg-white border border-black/10 flex items-center justify-center hover:bg-black hover:text-white transition">
         <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" viewBox="0 0 24 24">
           <path d="M19.59 6.69a4.8 4.8 0 0 1-3.77-1.88v10.55a5.37 5.37 0 1 1-5.37-5.37c.3 0 .59.03.88.08v2.65a2.72 2.72 0 1 0 1.84 2.64V2h2.65a4.8 4.8 0 0 0 3.77 4.69Z" />
         </svg>
       </a>
 
-      <a href="https://youtube.com/@FOUNDCommunity" target="_blank" aria-label="FOUND YouTube" class="w-14 h-14 rounded-full bg-white border border-black/10 flex items-center justify-center hover:bg-black hover:text-white transition">
+      <a href="https://youtube.com/@FOUNDCommunity" target="_blank" rel="noopener" aria-label="FOUND YouTube" class="w-14 h-14 rounded-full bg-white border border-black/10 flex items-center justify-center hover:bg-black hover:text-white transition">
         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" viewBox="0 0 24 24">
           <path d="M23.5 6.19a3 3 0 0 0-2.1-2.1C19.55 3.5 12 3.5 12 3.5s-7.55 0-9.4.59A3 3 0 0 0 .5 6.19 31.1 31.1 0 0 0 0 12c0 2.02.17 4.03.5 5.81a3 3 0 0 0 2.1 2.1c1.85.59 9.4.59 9.4.59s7.55 0 9.4-.59a3 3 0 0 0 2.1-2.1c.33-1.78.5-3.79.5-5.81s-.17-4.03-.5-5.81ZM9.75 15.57V8.43L15.82 12l-6.07 3.57Z" />
         </svg>
       </a>
 
-      <a href="https://x.com/foundcommunity_" target="_blank" aria-label="FOUND X" class="w-14 h-14 rounded-full bg-white border border-black/10 flex items-center justify-center hover:bg-black hover:text-white transition">
+      <a href="https://x.com/foundcommunity_" target="_blank" rel="noopener" aria-label="FOUND X" class="w-14 h-14 rounded-full bg-white border border-black/10 flex items-center justify-center hover:bg-black hover:text-white transition">
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
           <path d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.41l-5.8-7.58-6.64 7.58H.47l8.6-9.83L0 1.15h7.59l5.24 6.93 6.07-6.93Zm-1.29 19.5h2.04L6.49 3.24H4.3l13.31 17.41Z" />
         </svg>
@@ -305,128 +374,230 @@
 <footer class="px-5 md:px-8 py-10 border-t border-black/5">
   <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-4 items-center justify-between text-sm text-neutral-500">
     <div class="font-semibold text-black text-lg">FOUND</div>
-    <div>Find Community. Real. Christian. Community.</div>
-    <div>FoundCommunity.app</div>
+    <div class="flex gap-5">
+      <a href="/terms.html" class="hover:text-black">Terms of Use</a>
+      <a href="/privacy.html" class="hover:text-black">Privacy Policy</a>
+      <a href="mailto:hello@found.community" class="hover:text-black">Contact</a>
+    </div>
+    <div>found.community</div>
   </div>
 </footer>
 
 </main>
 
-<!-- Netlify hidden form detector -->
-<form name="found-waitlist" data-netlify="true" netlify-honeypot="bot-field" hidden>
-  <input type="hidden" name="form-name" value="found-waitlist" />
-  <input name="name" type="text" />
-  <input name="email" type="email" />
-  <input name="city" type="text" />
-  <input name="state" type="text" />
-</form>
+<!-- ── Contact Modal (Give / Invest / Donate) ────────────── -->
+<div id="contactModal" class="modal-hidden fixed inset-0 z-[100] items-center justify-center px-5">
+  <button type="button" data-close-contact class="absolute inset-0 bg-black/50 backdrop-blur-sm" aria-label="Close modal"></button>
 
-<!-- Waitlist Popup Modal -->
-<div id="waitlistModal" class="modal-hidden fixed inset-0 z-[100] items-center justify-center px-5">
-  <button type="button" data-close-waitlist class="absolute inset-0 bg-black/50 backdrop-blur-sm" aria-label="Close modal"></button>
-
-  <div class="relative bg-white rounded-[36px] max-w-xl w-full p-7 md:p-10 border border-black/10 shadow-2xl">
-    <button type="button" data-close-waitlist class="absolute top-5 right-5 w-10 h-10 rounded-full bg-[#f8f6f3] border border-black/10 flex items-center justify-center hover:bg-black hover:text-white transition" aria-label="Close modal">
+  <div class="relative bg-white rounded-[36px] max-w-lg w-full p-7 md:p-10 border border-black/10 shadow-2xl">
+    <button type="button" data-close-contact class="absolute top-5 right-5 w-10 h-10 rounded-full bg-[#f8f6f3] border border-black/10 flex items-center justify-center hover:bg-black hover:text-white transition" aria-label="Close modal">
       ×
     </button>
 
-    <p class="text-sm uppercase tracking-[0.3em] text-neutral-400 mb-5">
-      Early access
+    <p class="text-sm uppercase tracking-[0.3em] text-neutral-400 mb-4">
+      Support the mission
     </p>
 
-    <h2 class="serif text-4xl md:text-5xl leading-tight mb-5">
-      Join the FOUND waitlist.
+    <h2 id="contactTitle" class="serif text-3xl md:text-4xl leading-tight mb-3">
+      Give to FOUND
     </h2>
 
-    <p class="text-neutral-600 leading-relaxed mb-8">
-      Be one of the first to know when FOUND launches in your area.
+    <p id="contactSubtitle" class="text-neutral-600 leading-relaxed mb-6">
+      Support early development and launch of FOUND.
     </p>
 
-    <form id="popupWaitlistForm" name="found-waitlist" method="POST" data-netlify="true" class="grid md:grid-cols-2 gap-3">
-      <input type="hidden" name="form-name" value="found-waitlist" />
-      <p class="hidden">
-        <label>Don’t fill this out if you’re human: <input name="bot-field" /></label>
-      </p>
+    <form id="contactForm" class="space-y-3" novalidate>
+      <input required name="name" type="text" placeholder="Your name"
+             class="w-full rounded-full bg-white border border-black/10 px-5 py-3.5 text-sm outline-none focus:border-black transition" />
+      <input required name="email" type="email" placeholder="Email address"
+             class="w-full rounded-full bg-white border border-black/10 px-5 py-3.5 text-sm outline-none focus:border-black transition" />
+      <textarea id="contactMessage" name="message" rows="3" placeholder="Anything you’d like us to know? (optional)"
+                class="w-full rounded-2xl bg-white border border-black/10 px-5 py-3.5 text-sm outline-none focus:border-black transition resize-none"></textarea>
 
-      <input required name="name" type="text" placeholder="Your name" class="rounded-full border border-black/10 px-5 py-4 outline-none focus:border-black" />
+      <div id="contactError" class="hidden text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-4 py-3"></div>
 
-      <input required name="email" type="email" placeholder="Email address" class="rounded-full border border-black/10 px-5 py-4 outline-none focus:border-black" />
-
-      <input name="city" type="text" placeholder="City" class="rounded-full border border-black/10 px-5 py-4 outline-none focus:border-black" />
-
-      <input name="state" type="text" placeholder="State" class="rounded-full border border-black/10 px-5 py-4 outline-none focus:border-black" />
-
-      <button type="submit" class="md:col-span-2 rounded-full bg-black text-white px-8 py-4 font-medium hover:opacity-90 transition">
-        Request Early Access
+      <button id="contactSubmit" type="submit"
+              class="w-full rounded-full bg-black text-white px-6 py-3.5 text-sm font-medium hover:opacity-90 transition disabled:opacity-50">
+        Continue
       </button>
     </form>
 
-    <div id="waitlistSuccess" class="hidden mt-6 rounded-3xl bg-[#f8f6f3] border border-black/5 p-5">
-      <h3 class="font-semibold text-xl mb-2">You’re on the list.</h3>
-      <p class="text-neutral-600">
-        Thanks for joining the FOUND waitlist. We’ll keep you updated as we build.
-      </p>
+    <div id="contactSuccess" class="hidden mt-4 rounded-2xl bg-[#f8f6f3] border border-black/5 p-5 text-center">
+      <p class="font-semibold text-sm mb-1">Message received.</p>
+      <p class="text-sm text-neutral-500">Thank you — we’ll be in touch soon.</p>
     </div>
 
     <p class="text-xs text-neutral-400 mt-5">
-      No spam. Just FOUND updates and launch news.
+      Questions? Email
+      <a href="mailto:hello@found.community" class="underline underline-offset-2 hover:text-black">hello@found.community</a>.
     </p>
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="/assets/auth.js"></script>
 <script>
-  const waitlistModal = document.getElementById('waitlistModal');
-  const openWaitlistButtons = document.querySelectorAll('[data-open-waitlist]');
-  const closeWaitlistButtons = document.querySelectorAll('[data-close-waitlist]');
-  const popupWaitlistForm = document.getElementById('popupWaitlistForm');
-  const waitlistSuccess = document.getElementById('waitlistSuccess');
+  // _supabase is created by auth.js — reuse it.
+  const _supabase = window._supabase;
 
-  function openWaitlistModal() {
-    waitlistModal.classList.remove('modal-hidden');
-    waitlistModal.classList.add('modal-visible');
+  // Swap header CTA based on session.
+  foundAuth.applyHeaderSession();
+
+  // ── Contact modal (Give / Invest / Donate) ──────────────────────────
+  // Per-type copy + behaviour. Give/Donate redirect to a Stripe Payment
+  // Link after capturing the lead; Invest shows an inline success message.
+  //
+  // LIVE Stripe Payment Link — donation. Connected 2026-05-21.
+  const STRIPE_LINK = 'https://buy.stripe.com/bJecN61w98a3gDl2Pd5Ne00';
+
+  const CONTACT_CONFIG = {
+    give: {
+      title: 'Give to FOUND',
+      subtitle: 'Support early development and launch of FOUND.',
+      placeholder: 'Anything you’d like us to know? (optional)',
+      submit: 'Continue to Give',
+      stripe: STRIPE_LINK,
+    },
+    invest: {
+      title: 'Invest in FOUND',
+      subtitle: 'Interested in helping fund the vision? Tell us a bit about you and we’ll reach out.',
+      placeholder: 'Tell us about your investment interest.',
+      submit: 'Send Inquiry',
+      stripe: null,
+    },
+    donate: {
+      title: 'Donate to FOUND',
+      subtitle: 'Help accelerate the launch of FOUND.',
+      placeholder: 'What inspired you to donate? (optional)',
+      submit: 'Continue to Donate',
+      stripe: STRIPE_LINK,
+    },
+  };
+
+  const contactModal    = document.getElementById('contactModal');
+  const contactForm     = document.getElementById('contactForm');
+  const contactTitle    = document.getElementById('contactTitle');
+  const contactSubtitle = document.getElementById('contactSubtitle');
+  const contactMessage  = document.getElementById('contactMessage');
+  const contactSubmit   = document.getElementById('contactSubmit');
+  const contactError    = document.getElementById('contactError');
+  const contactSuccess  = document.getElementById('contactSuccess');
+
+  let contactType = 'give';
+
+  function isValidEmail(value) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  }
+
+  function openContactModal(type) {
+    contactType = (type in CONTACT_CONFIG) ? type : 'give';
+    const cfg = CONTACT_CONFIG[contactType];
+
+    contactTitle.textContent       = cfg.title;
+    contactSubtitle.textContent    = cfg.subtitle;
+    contactMessage.placeholder     = cfg.placeholder;
+    contactSubmit.textContent      = cfg.submit;
+
+    // Reset form state each open
+    contactForm.reset();
+    contactForm.classList.remove('hidden');
+    contactSuccess.classList.add('hidden');
+    contactError.classList.add('hidden');
+    contactSubmit.disabled = false;
+
+    contactModal.classList.remove('modal-hidden');
+    contactModal.classList.add('modal-visible');
     document.body.style.overflow = 'hidden';
   }
 
-  function closeWaitlistModal() {
-    waitlistModal.classList.add('modal-hidden');
-    waitlistModal.classList.remove('modal-visible');
+  function closeContactModal() {
+    contactModal.classList.add('modal-hidden');
+    contactModal.classList.remove('modal-visible');
     document.body.style.overflow = '';
   }
 
-  function encodeFormData(data) {
-    return new URLSearchParams(data).toString();
-  }
-
-  openWaitlistButtons.forEach((button) => {
-    button.addEventListener('click', openWaitlistModal);
+  document.querySelectorAll('[data-open-contact]').forEach((btn) => {
+    btn.addEventListener('click', () => openContactModal(btn.dataset.type));
+  });
+  document.querySelectorAll('[data-close-contact]').forEach((btn) => {
+    btn.addEventListener('click', closeContactModal);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeContactModal();
   });
 
-  closeWaitlistButtons.forEach((button) => {
-    button.addEventListener('click', closeWaitlistModal);
+  contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    contactError.classList.add('hidden');
+
+    const cfg     = CONTACT_CONFIG[contactType];
+    const name    = contactForm.querySelector('[name="name"]').value.trim();
+    const email   = contactForm.querySelector('[name="email"]').value.trim();
+    const message = contactForm.querySelector('[name="message"]').value.trim();
+
+    if (!name) {
+      contactError.textContent = 'Please enter your name.';
+      contactError.classList.remove('hidden');
+      return;
+    }
+    if (!isValidEmail(email)) {
+      contactError.textContent = 'Please enter a valid email address.';
+      contactError.classList.remove('hidden');
+      return;
+    }
+
+    contactSubmit.disabled = true;
+    contactSubmit.textContent = 'Sending…';
+
+    // Store the lead in Supabase. A database trigger emails hello@found.community.
+    let insertOk = true;
+    try {
+      const { error } = await _supabase
+        .from('contact_submissions')
+        .insert({ type: contactType, name, email, message });
+      if (error) { insertOk = false; console.warn('[contact] insert error', error); }
+    } catch (err) {
+      insertOk = false;
+      console.warn('[contact] insert failed', err);
+    }
+
+    // Give / Donate → Stripe (payment is the priority — proceed even if
+    // lead capture hiccuped). Invest → needs the lead saved to be useful.
+    if (cfg.stripe) {
+      const sep = cfg.stripe.includes('?') ? '&' : '?';
+      window.location.href = `${cfg.stripe}${sep}prefilled_email=${encodeURIComponent(email)}`;
+      return;
+    }
+
+    if (!insertOk) {
+      contactError.textContent = 'Something went wrong. Please email hello@found.community.';
+      contactError.classList.remove('hidden');
+      contactSubmit.disabled = false;
+      contactSubmit.textContent = cfg.submit;
+      return;
+    }
+
+    contactForm.classList.add('hidden');
+    contactSuccess.classList.remove('hidden');
   });
 
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') closeWaitlistModal();
+  // ── Hero stagger ────────────────────────────────────────────────────
+  document.querySelectorAll('.hero-stagger > *').forEach((el, i) => {
+    el.style.animationDelay = `${i * 0.12}s`;
+    el.classList.add('hero-anim');
   });
 
-  popupWaitlistForm.addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    const formData = new FormData(popupWaitlistForm);
-
-    fetch('/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: encodeFormData(formData)
-    })
-    .then(() => {
-      popupWaitlistForm.classList.add('hidden');
-      waitlistSuccess.classList.remove('hidden');
-    })
-    .catch(() => {
-      alert('Something went wrong. Please email foundcommunityapp@gmail.com.');
+  // ── Scroll reveals ──────────────────────────────────────────────────
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
+      }
     });
-  });
+  }, { threshold: 0.2, rootMargin: '0px 0px -80px 0px' });
+
+  document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
 </script>
 
 </body>
